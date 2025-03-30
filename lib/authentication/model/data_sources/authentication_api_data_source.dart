@@ -3,7 +3,7 @@ import 'package:cattlehealthtracker/authentication/model/data_sources/authentica
 
 class AuthenticationApiDataSource extends AuthenticationDataSource{
   @override
-  UserModel login(String username, String password) {
+  Future<UserModel> login(String username, String password) {
     // TODO: implement login
     throw UnimplementedError();
   }

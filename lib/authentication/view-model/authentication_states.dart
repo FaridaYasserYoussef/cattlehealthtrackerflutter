@@ -6,6 +6,8 @@ class AuthenticationInitialState extends AuthenticationStates{}
 
 class AuthenticationLoadingState extends AuthenticationStates{}
 
+class Authentication2faState extends AuthenticationStates{}
+
 class AuthenticationSuccessState extends AuthenticationStates{
   final UserModel user;
 

@@ -1,3 +1,5 @@
+import 'package:cattlehealthtracker/authentication/view/widgets/custom_button.dart';
+import 'package:cattlehealthtracker/authentication/view/widgets/custom_text_form_field.dart';
 import 'package:cattlehealthtracker/common/app_images.dart';
 import 'package:cattlehealthtracker/generated/l10n.dart';
 import 'package:cattlehealthtracker/settings/view-model/settings_cubit.dart';
@@ -17,7 +19,9 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
   @override
   Widget build(BuildContext context) {
    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-     
+   TextEditingController emailController = TextEditingController();
+      TextEditingController passwordController = TextEditingController();
+
         return SafeArea(
           child: Scaffold(
             appBar: AppBar(
@@ -67,7 +71,11 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                   width: 180.w,
                   height: 180.h,
                   ),
-                )
+                ),
+
+                CustomTextFormField(controller: emailController, type: "text", hintText: S.of(context).email),
+                CustomTextFormField(controller: passwordController, type: "password", hintText: S.of(context).password),
+                CustomButton(text: S.of(context).login, onTap: (){},)
               ],
              ),
            )

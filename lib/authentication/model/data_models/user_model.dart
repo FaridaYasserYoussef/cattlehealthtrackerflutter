@@ -5,5 +5,7 @@ class UserModel {
   String lastName;
   String email;
   RoleModel role;
-  UserModel({required this.firstName, required this.lastName, required this.email, required this.role});
+  String mobileNumber;
+  bool twoFaEnabled;
+  UserModel({required this.firstName, required this.lastName, required this.email, required this.role, required this.mobileNumber, required this.twoFaEnabled});
 }

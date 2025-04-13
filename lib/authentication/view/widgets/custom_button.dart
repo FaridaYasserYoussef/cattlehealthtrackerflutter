@@ -12,7 +12,7 @@ class CustomButton extends StatelessWidget {
     return Padding(
       padding:  EdgeInsets.symmetric(horizontal: 8.w),
       child: ElevatedButton(
-        style: Theme.of(context).elevatedButtonTheme.style,
+        style: Theme.of(context).elevatedButtonTheme.style!.copyWith(padding: WidgetStatePropertyAll(EdgeInsets.only(top: 2.h))),
         onPressed: onTap, 
       child: Text(text, style: Theme.of(context).textTheme.bodyLarge)
       ),

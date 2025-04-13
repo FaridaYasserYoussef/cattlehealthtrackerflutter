@@ -6,4 +6,6 @@ class API{
   static const hostConnectAuthenticationOtp = "$hostConnectAuthentication/otp";
   static const hostConnectAuthenticationResendOtp = "$hostConnectAuthentication/resend_otp";
   static const hostConnectAuthenticationChangePassword= "$hostConnectAuthentication/change_password";
+    static const hostConnectAuthenticationToggle2fa = "$hostConnectAuthentication/toggle_2fa";
+
 }

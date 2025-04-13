@@ -5,10 +5,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class AppThemes{
  static final  lightTheme = ThemeData(
   scaffoldBackgroundColor: AppColors.backgroundColorLight,
-  appBarTheme: AppBarTheme(backgroundColor: AppColors.light_green),
+  appBarTheme: AppBarTheme(backgroundColor: AppColors.backgroundColorLight),
   elevatedButtonTheme:  ElevatedButtonThemeData(
   style: ElevatedButton.styleFrom(
-    backgroundColor: AppColors.light_green,
+    backgroundColor: AppColors.greenColor,
     disabledBackgroundColor: Colors.grey,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(9.r)
@@ -17,15 +17,15 @@ class AppThemes{
 ),
   brightness: Brightness.light,
   textTheme: TextTheme(
-    bodyLarge: TextStyle(color: AppColors.greenColor, fontSize: 18.sp, fontWeight: FontWeight.bold),
-    titleLarge: TextStyle(color: AppColors.greenColor, fontSize: 30.sp, fontWeight: FontWeight.bold)
+    bodyLarge: TextStyle(color: AppColors.text_light, fontSize: 18.sp, fontFamily: "Tajawal", fontWeight: FontWeight.bold),
+    titleLarge: TextStyle(color: AppColors.text_light, fontSize: 30.sp, fontFamily: "Tajawal", fontWeight: FontWeight.bold)
   )
 
  );
 
   static final  darkTheme = ThemeData(
     scaffoldBackgroundColor: AppColors.backgroundColorDark,
-      appBarTheme: AppBarTheme(backgroundColor: AppColors.greenColor),
+      appBarTheme: AppBarTheme(backgroundColor: AppColors.backgroundColorDark),
 elevatedButtonTheme: ElevatedButtonThemeData(
   style: ElevatedButton.styleFrom(
     backgroundColor: AppColors.greenColor,
@@ -40,8 +40,8 @@ elevatedButtonTheme: ElevatedButtonThemeData(
 ),
   brightness: Brightness.dark,
   textTheme: TextTheme(
-    bodyLarge: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.bold),
-    titleLarge: TextStyle(color: Colors.white, fontSize: 30.sp, fontWeight: FontWeight.bold)
+    bodyLarge: TextStyle(color: AppColors.text_dark, fontSize: 18.sp, fontFamily: "Tajawal", fontWeight: FontWeight.bold),
+    titleLarge: TextStyle(color: AppColors.text_dark, fontSize: 30.sp, fontFamily: "Tajawal", fontWeight: FontWeight.bold)
   )
 
  );

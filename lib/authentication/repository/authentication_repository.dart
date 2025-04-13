@@ -10,24 +10,25 @@ class AuthenticationRepository {
      return user;
   }
 
-  Future<bool?> changePassword(String email, String newPassword)async{
-    
+  Future<bool?> changePassword(String oldPassword, String newPassword)async{
+    bool? password_changed = await dataSource.changePassword(oldPassword, newPassword);
+    return password_changed;
   }
 
 
-  Future<UserModel?> verifyOtp(String otp) {
-    // TODO: implement verifyOtp
-    throw UnimplementedError();
+  Future<UserModel?> verifyOtp(String otp) async{
+   UserModel? user  = await dataSource.verifyOtp(otp);
+     return user;
   }
   
-  Future<bool> toggle2fa() {
-    // TODO: implement toggleOtp
-    throw UnimplementedError();
+  Future<bool?> toggle2fa() async{
+  bool? current2faValue = await dataSource.toggle2fa();
+  return current2faValue;
   }
   
-  Future<bool> resendOtp() {
-    // TODO: implement resendOtp
-    throw UnimplementedError();
+  Future<bool?> resendOtp(String email) async{
+   bool? otpSent = await dataSource.resendOtp(email);
+   return otpSent;
   }
   
 }

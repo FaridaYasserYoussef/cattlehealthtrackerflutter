@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
             supportedLocales: S.delegate.supportedLocales,
                 debugShowCheckedModeBanner: false,
                 title: 'Flutter Demo',
+                // theme: ThemeData.dark(),
                 theme: state.settingsModel.theme == "dark"? AppThemes.darkTheme: AppThemes.lightTheme,
                 home: state.settingsModel.isloggedIn? HomeScreen(): UserLoginScreen(),
               );

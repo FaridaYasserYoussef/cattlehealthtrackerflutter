@@ -26,7 +26,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             borderRadius: BorderRadius.circular(10.r)
           ),
           contentPadding: EdgeInsets.all(5.h),
-          hintStyle: TextStyle(fontSize: 18.sp, color: AppColors.greenColor, fontWeight: FontWeight.bold),
+          hintStyle: TextStyle(fontSize: 18.sp, color: Theme.of(context).brightness == Brightness.dark? AppColors.text_dark: AppColors.text_light, fontFamily: "Tajawal", fontWeight: FontWeight.bold),
           hintText: widget.hintText,
           suffixIconColor: widget.type == "password"? AppColors.light_green: null,
           suffixIcon: widget.type == "password"? IconButton(onPressed: (){

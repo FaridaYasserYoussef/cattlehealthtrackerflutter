@@ -8,10 +8,10 @@ class AuthenticationLoadingState extends AuthenticationStates{}
 
 class Authentication2faState extends AuthenticationStates{}
 
-class AuthenticationSuccessState extends AuthenticationStates{
+class LoginSuccessState extends AuthenticationStates{
   final UserModel user;
 
-  AuthenticationSuccessState({required this.user});
+  LoginSuccessState({required this.user});
 
 }
 
@@ -19,4 +19,24 @@ class AuthenticationErrorState extends AuthenticationStates{
   final String errorMessage;
 
   AuthenticationErrorState({required this.errorMessage});
+
+
 }
+
+
+  class ChangePasswordSuccessState extends AuthenticationStates{}
+
+  class Toggle2faSuccessState extends AuthenticationStates{
+   final bool twoFaEnabled;
+
+  Toggle2faSuccessState({required this.twoFaEnabled});
+
+  }
+
+  class VerifyOtpSuccessState extends AuthenticationStates{
+      final UserModel user;
+
+  VerifyOtpSuccessState({required this.user});
+  }
+
+  class ResendOtpSuccessState extends AuthenticationStates{}

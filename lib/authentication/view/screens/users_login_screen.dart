@@ -36,8 +36,8 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                  else if(state is SettingsSuccessState){
                   return  DropdownButton<String>(
                     items: [
-                  DropdownMenuItem(child: Text("en"), value: "en",),
-                  DropdownMenuItem(child: Text("ar"), value: "ar",)
+                  DropdownMenuItem(child: Text("en", style: TextStyle(fontFamily: "Tajawal"),), value: "en",),
+                  DropdownMenuItem(child: Text("ar", style: TextStyle(fontFamily: "Tajawal"),), value: "ar",)
         
                 ], onChanged:(value) async{
                   await context.read<SettingsCubit>().setLocale(value!);
@@ -67,9 +67,12 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                 ),
         
                 Center(
-                  child: Image.asset(Theme.of(context).brightness == Brightness.dark ? AppImages.logo_dark : AppImages.logo_light,
-                  width: 180.w,
-                  height: 180.h,
+                  child: Padding(
+                    padding:  EdgeInsets.symmetric(vertical: 30.h),
+                    child: Image.asset(Theme.of(context).brightness == Brightness.dark ? AppImages.logo_dark : AppImages.logo_light,
+                    width: 180.w,
+                    height: 180.h,
+                    ),
                   ),
                 ),
 

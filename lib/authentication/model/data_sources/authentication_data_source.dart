@@ -6,5 +6,7 @@ abstract class AuthenticationDataSource{
   Future<UserModel?> verifyOtp(String otp);
   Future<bool?> toggle2fa();
   Future<bool?> resendOtp(String email);
+  Future<bool?> logout();
+  Future<bool?> logoutLocally();
   
 }

@@ -1,7 +1,9 @@
 import 'package:cattlehealthtracker/api/api.dart';
+import 'package:cattlehealthtracker/authentication/view-model/authentication_cubit.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_it/get_it.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 class DioService {
   // create a private constructor
@@ -54,23 +56,46 @@ class DioService {
         },
         onError: onError ??
         (DioException e, handler)async{
+          try{
          if(e.response?.statusCode == 401){
-          
-          String? newToken = await refreshToken();
-          if(newToken != null){
-            e.requestOptions.headers["Authorization"] = "Bearer $newToken";
+           if (e.response?.data["error"] == "Refresh token expired") {
+              AuthenticationCubit cubit = GetIt.instance<AuthenticationCubit>();
+              await cubit.logout(); 
+              return;
+
+            }
+          String oldAuth = e.requestOptions.headers["Authorization"];
+          print("oldAuth $oldAuth");
+          List<String?>? newTokens = await refreshToken();
+          if(newTokens != null){
+            e.requestOptions.headers["Authorization"] = "Bearer ${newTokens[0]}";
+            String newAuth = e.requestOptions.headers["Authorization"];
+            print("newAuth $newAuth");
+            print("old auth == new auth: ${oldAuth == newAuth}");
             final clonedRequest = await _dio.request(
               e.requestOptions.path,
+              data: e.requestOptions.path.endsWith("/logout")?{"refresh": newTokens[1]}: e.requestOptions.data,
+              queryParameters: e.requestOptions.queryParameters,
               options: Options(
                 method: e.requestOptions.method,
-                headers: e.requestOptions.headers
+                headers: {
+                  // ...e.requestOptions.headers,
+                  "Authorization": newAuth
+                  }
               )
             );
+        // final response = await _dio.fetch(e.requestOptions);
+
+        // return handler.resolve(response);
           return handler.resolve(clonedRequest);
 
           }
          }
-         return handler.next(e);
+         }
+         catch(_){
+          return handler.next(e);
+         }
+         
 
         }
       )
@@ -79,7 +104,7 @@ class DioService {
   }
 
 
-  Future<String?> refreshToken()async{
+  Future<List<String?>?> refreshToken()async{
   final storage = FlutterSecureStorage();
           String? refreshToken = await storage.read(key: "refresh");
           Response response = await _dio.post(API.refreshTokenEnpoint, data: {
@@ -87,7 +112,8 @@ class DioService {
           });
 await storage.write(key: "refresh", value: response.data["refresh"]);
 await storage.write(key:"access", value: response.data["access"]);
-      return response.data["access"];
+List<String?>? newTokens = [response.data["access"], response.data["refresh"]];
+      return newTokens;
   }
 
   Future<Response> getRequest(String endpoint,

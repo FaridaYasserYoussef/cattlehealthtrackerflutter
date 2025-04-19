@@ -30,5 +30,15 @@ class AuthenticationRepository {
    bool? otpSent = await dataSource.resendOtp(email);
    return otpSent;
   }
+
+  Future<bool?> logout() async{
+    bool? logged_out = await dataSource.logout();
+    return logged_out;
+  }
+
+  Future<bool?> logoutLocally() async{
+    bool? logged_out = await dataSource.logoutLocally();
+    return logged_out;
+  }
   
 }

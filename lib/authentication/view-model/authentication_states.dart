@@ -40,3 +40,5 @@ class AuthenticationErrorState extends AuthenticationStates{
   }
 
   class ResendOtpSuccessState extends AuthenticationStates{}
+
+  class LogoutSuccessState extends AuthenticationStates{}

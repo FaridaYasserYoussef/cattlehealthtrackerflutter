@@ -22,8 +22,42 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
+    "cattle": MessageLookupByLibrary.simpleMessage("الماشية"),
+    "confirm": MessageLookupByLibrary.simpleMessage("تأكيد"),
+    "confirmLogout": MessageLookupByLibrary.simpleMessage("تأكيد الخروج"),
+    "culling": MessageLookupByLibrary.simpleMessage("الإعدام"),
+    "dashboard": MessageLookupByLibrary.simpleMessage("لوحة التحكم"),
     "email": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
+    "emailAt": MessageLookupByLibrary.simpleMessage(
+      "@ يجب أن يحتوي البريد الإلكتروني على علامة",
+    ),
+    "emailDotCom": MessageLookupByLibrary.simpleMessage(
+      ".com يجب أن ينتهي البريد الإلكتروني بـ",
+    ),
+    "emptyEmail": MessageLookupByLibrary.simpleMessage(
+      "لا يمكن أن يكون البريد الإلكتروني فارغًا",
+    ),
+    "emptyPassword": MessageLookupByLibrary.simpleMessage(
+      "لا يمكن أن تكون كلمة المرور فارغة",
+    ),
+    "loading": MessageLookupByLibrary.simpleMessage("جارٍ التحميل..."),
     "login": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
+    "loginSuccess": MessageLookupByLibrary.simpleMessage(
+      "تم تسجيل الدخول بنجاح",
+    ),
+    "logout": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
+    "logoutSuccess": MessageLookupByLibrary.simpleMessage(
+      "تم تسجيل الخروج بنجاح",
+    ),
+    "logs": MessageLookupByLibrary.simpleMessage("السجلات"),
+    "medicines": MessageLookupByLibrary.simpleMessage("الأدوية"),
     "password": MessageLookupByLibrary.simpleMessage("كلمة السر"),
+    "passwordMinLen": MessageLookupByLibrary.simpleMessage(
+      "يجب أن تكون كلمة المرور مكونة من 8 أحرف على الأقل",
+    ),
+    "roles": MessageLookupByLibrary.simpleMessage("الأدوار"),
+    "settings": MessageLookupByLibrary.simpleMessage("الإعدادات"),
+    "users": MessageLookupByLibrary.simpleMessage("المستخدمون"),
   };
 }

@@ -6,7 +6,7 @@ import 'package:cattlehealthtracker/authentication/model/data_sources/authentica
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'dart:convert';
 class AuthenticationApiDataSource extends AuthenticationDataSource{
   static DioService dioService = DioService();
   @override
@@ -17,24 +17,27 @@ class AuthenticationApiDataSource extends AuthenticationDataSource{
        {
        "email":email,
        "password": password
-       },null, null);
-
+       },null,  null);
+       print("response is ");
+      print(postResponse.data);
       if(postResponse.data["detail"] == "login successful"){
+        print("logins successful");
        UserModel user = UserModel(
         firstName: postResponse.data["user"]["first_name"], 
         lastName: postResponse.data["user"]["last_name"], 
         email: postResponse.data["user"]["email"], 
         role: RoleModel(name: postResponse.data["user"]["role"],
-        features: postResponse.data["user"]["features"]), 
+        features: List<String>.from(postResponse.data["user"]["features"])), 
         mobileNumber: postResponse.data["user"]["mobile_number"], 
         twoFaEnabled: postResponse.data["user"]["two_fa_enabled"]);
         // secure storage saving logic
         final storage = FlutterSecureStorage();
         SharedPreferences prefs = await SharedPreferences.getInstance();
+       await prefs.setBool("isLoggedIn", true);
         await prefs.setBool("twoFaEnabled", postResponse.data["user"]["two_fa_enabled"]);
         await storage.write(key: "email", value: postResponse.data["user"]["email"]);
         await storage.write(key: "phone", value:  postResponse.data["user"]["mobile_number"]);
-        await storage.write(key: "features", value: postResponse.data["user"]["features"].toString());
+        await storage.write(key: "features", value: jsonEncode(postResponse.data["user"]["features"]));
         await storage.write(key: "refresh", value: postResponse.data["refresh"]);
         await storage.write(key: "access", value: postResponse.data["access"]);
  
@@ -93,6 +96,7 @@ class AuthenticationApiDataSource extends AuthenticationDataSource{
         twoFaEnabled: response.data["user"]["two_fa_enabled"]);
             final storage = FlutterSecureStorage();
         SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setBool("isLoggedIn", true);
         await prefs.setBool("twoFaEnabled", response.data["user"]["two_fa_enabled"]);
         await storage.write(key: "email", value: response.data["user"]["email"]);
         await storage.write(key: "phone", value:  response.data["user"]["mobile_number"]);
@@ -145,6 +149,64 @@ class AuthenticationApiDataSource extends AuthenticationDataSource{
     }
   }
   
+  @override
+  Future<bool?> logout() async{
+    try{
+      final storage = FlutterSecureStorage();
+      String? accessToken = await storage.read(key: "access");
+      String? refreshToken = await storage.read(key: "refresh");
+      print("refresh token sent is ${refreshToken}");
+      dioService.configureDio(baseUrl: API.hostConnect);
+      Response response = await dioService.postRequest(API.hostConnectAuthenticationLogout,
+    {
+      "refresh": refreshToken
+    },
+        null, {
+          "Authorization": "Bearer $accessToken"
+        });
 
+        if(response.statusCode == 500){
+          print("errorrr is ${response.data}");
+        }
+
+
+      if(response.statusCode ==  200){
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool("isLoggedIn", false);
+        await prefs.remove("twoFaEnabled");
+        await storage.delete(key: "email");
+        await storage.delete(key: "phone");
+        await storage.delete(key: "features");
+        await storage.delete(key: "refresh");
+        await storage.delete(key: "access");
+        return true;
+
+      }
+
+    }catch(e){
+      throw Exception(e.toString());
+    }
+
+  }
   
+  @override
+  Future<bool?> logoutLocally() async{
+       try{
+        final storage = FlutterSecureStorage();
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool("isLoggedIn", false);
+        await prefs.remove("twoFaEnabled");
+        await storage.delete(key: "email");
+        await storage.delete(key: "phone");
+        await storage.delete(key: "features");
+        await storage.delete(key: "refresh");
+        await storage.delete(key: "access");
+        return true;
+
+
+    }catch(e){
+      throw Exception(e.toString());
+    }
+  }
+
 }

@@ -2,7 +2,9 @@ import 'package:cattlehealthtracker/authentication/model/data_models/user_model.
 import 'package:cattlehealthtracker/authentication/repository/authentication_repository.dart';
 import 'package:cattlehealthtracker/authentication/view-model/authentication_states.dart';
 import 'package:cattlehealthtracker/common/service_locator.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AuthenticationCubit extends Cubit<AuthenticationStates>{
     AuthenticationRepository repository;
@@ -15,9 +17,11 @@ class AuthenticationCubit extends Cubit<AuthenticationStates>{
       emit(AuthenticationLoadingState());
       UserModel? user = await repository.login(email, password);
       emit(LoginSuccessState(user: user!));
+      
 
     }catch(e){
       emit(AuthenticationErrorState(errorMessage: e.toString()));
+      Fluttertoast.showToast(msg: e.toString(), backgroundColor: Colors.red);
     }
   }
 
@@ -55,6 +59,28 @@ class AuthenticationCubit extends Cubit<AuthenticationStates>{
         emit(AuthenticationLoadingState());
         await repository.resendOtp(email);
         emit(ResendOtpSuccessState());
+       }catch(e){
+        emit(AuthenticationErrorState(errorMessage: e.toString()));
+       }
+
+     }
+
+      Future<void> logout() async{
+       try{
+        emit(AuthenticationLoadingState());
+        await repository.logout();
+        emit(LogoutSuccessState());
+       }catch(e){
+        emit(AuthenticationErrorState(errorMessage: e.toString()));
+       }
+
+     }
+
+     Future<void> logoutLocally() async{
+       try{
+        emit(AuthenticationLoadingState());
+        await repository.logoutLocally();
+        emit(LogoutSuccessState());
        }catch(e){
         emit(AuthenticationErrorState(errorMessage: e.toString()));
        }

@@ -69,6 +69,146 @@ class S {
   String get password {
     return Intl.message('Password', name: 'password', desc: '', args: []);
   }
+
+  /// `Loading...`
+  String get loading {
+    return Intl.message('Loading...', name: 'loading', desc: '', args: []);
+  }
+
+  /// `Email can't be empty`
+  String get emptyEmail {
+    return Intl.message(
+      'Email can\'t be empty',
+      name: 'emptyEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email must contain @`
+  String get emailAt {
+    return Intl.message(
+      'Email must contain @',
+      name: 'emailAt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email must end with .com`
+  String get emailDotCom {
+    return Intl.message(
+      'Email must end with .com',
+      name: 'emailDotCom',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password can't be empty`
+  String get emptyPassword {
+    return Intl.message(
+      'Password can\'t be empty',
+      name: 'emptyPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password is at least 8 characters`
+  String get passwordMinLen {
+    return Intl.message(
+      'Password is at least 8 characters',
+      name: 'passwordMinLen',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Login Successful`
+  String get loginSuccess {
+    return Intl.message(
+      'Login Successful',
+      name: 'loginSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logout Successful`
+  String get logoutSuccess {
+    return Intl.message(
+      'Logout Successful',
+      name: 'logoutSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Confirm`
+  String get confirm {
+    return Intl.message('Confirm', name: 'confirm', desc: '', args: []);
+  }
+
+  /// `Confirm logout`
+  String get confirmLogout {
+    return Intl.message(
+      'Confirm logout',
+      name: 'confirmLogout',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get cancel {
+    return Intl.message('Cancel', name: 'cancel', desc: '', args: []);
+  }
+
+  /// `Dashboard`
+  String get dashboard {
+    return Intl.message('Dashboard', name: 'dashboard', desc: '', args: []);
+  }
+
+  /// `Users`
+  String get users {
+    return Intl.message('Users', name: 'users', desc: '', args: []);
+  }
+
+  /// `Cattle`
+  String get cattle {
+    return Intl.message('Cattle', name: 'cattle', desc: '', args: []);
+  }
+
+  /// `Culling`
+  String get culling {
+    return Intl.message('Culling', name: 'culling', desc: '', args: []);
+  }
+
+  /// `Logs`
+  String get logs {
+    return Intl.message('Logs', name: 'logs', desc: '', args: []);
+  }
+
+  /// `Medicines`
+  String get medicines {
+    return Intl.message('Medicines', name: 'medicines', desc: '', args: []);
+  }
+
+  /// `Settings`
+  String get settings {
+    return Intl.message('Settings', name: 'settings', desc: '', args: []);
+  }
+
+  /// `Roles`
+  String get roles {
+    return Intl.message('Roles', name: 'roles', desc: '', args: []);
+  }
+
+  /// `Logout`
+  String get logout {
+    return Intl.message('Logout', name: 'logout', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

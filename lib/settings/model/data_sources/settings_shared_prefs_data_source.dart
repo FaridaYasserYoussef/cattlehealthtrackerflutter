@@ -7,7 +7,7 @@ class SettingsSharedPrefsDataSource extends SettingsDataSource{
  Future<SettingsModel> getSettings() async{
    final SharedPreferences prefs = await SharedPreferences.getInstance();
    
-   return SettingsModel(theme: prefs.getString("theme")?? "light", locale: prefs.getString("locale") ?? "ar", isloggedIn: prefs.getBool("isloggedIn") ?? false);
+   return SettingsModel(theme: prefs.getString("theme")?? "light", locale: prefs.getString("locale") ?? "ar", isloggedIn: prefs.getBool("isLoggedIn") ?? false);
   }
 
   @override

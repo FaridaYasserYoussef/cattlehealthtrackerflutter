@@ -22,8 +22,34 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "cattle": MessageLookupByLibrary.simpleMessage("Cattle"),
+    "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
+    "confirmLogout": MessageLookupByLibrary.simpleMessage("Confirm logout"),
+    "culling": MessageLookupByLibrary.simpleMessage("Culling"),
+    "dashboard": MessageLookupByLibrary.simpleMessage("Dashboard"),
     "email": MessageLookupByLibrary.simpleMessage("Email"),
+    "emailAt": MessageLookupByLibrary.simpleMessage("Email must contain @"),
+    "emailDotCom": MessageLookupByLibrary.simpleMessage(
+      "Email must end with .com",
+    ),
+    "emptyEmail": MessageLookupByLibrary.simpleMessage("Email can\'t be empty"),
+    "emptyPassword": MessageLookupByLibrary.simpleMessage(
+      "Password can\'t be empty",
+    ),
+    "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
     "login": MessageLookupByLibrary.simpleMessage("Login"),
+    "loginSuccess": MessageLookupByLibrary.simpleMessage("Login Successful"),
+    "logout": MessageLookupByLibrary.simpleMessage("Logout"),
+    "logoutSuccess": MessageLookupByLibrary.simpleMessage("Logout Successful"),
+    "logs": MessageLookupByLibrary.simpleMessage("Logs"),
+    "medicines": MessageLookupByLibrary.simpleMessage("Medicines"),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
+    "passwordMinLen": MessageLookupByLibrary.simpleMessage(
+      "Password is at least 8 characters",
+    ),
+    "roles": MessageLookupByLibrary.simpleMessage("Roles"),
+    "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+    "users": MessageLookupByLibrary.simpleMessage("Users"),
   };
 }

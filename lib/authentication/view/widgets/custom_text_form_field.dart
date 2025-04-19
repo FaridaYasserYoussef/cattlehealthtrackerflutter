@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomTextFormField extends StatefulWidget {
-   CustomTextFormField({super.key, required this.controller, required this.type, required this.hintText});
+   CustomTextFormField({super.key, required this.controller, required this.type, required this.hintText, this.validator});
   TextEditingController controller;
   String type; 
   String hintText;
+  String? Function(String?)? validator;
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
 }
@@ -19,6 +20,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     return Padding(
       padding:  EdgeInsets.only(bottom: 25.h, left: 8.h, right: 8.h),
       child: TextFormField(
+        validator: widget.validator,
         obscureText: widget.type == "password"? isVisible? false: true: false,
         controller: widget.controller,
         decoration: InputDecoration(

@@ -2,6 +2,7 @@ import 'package:cattlehealthtracker/authentication/view-model/authentication_cub
 import 'package:cattlehealthtracker/authentication/view-model/authentication_states.dart';
 import 'package:cattlehealthtracker/authentication/view/widgets/custom_button.dart';
 import 'package:cattlehealthtracker/authentication/view/widgets/custom_text_form_field.dart';
+import 'package:cattlehealthtracker/authentication/view/widgets/otp_form_widget.dart';
 import 'package:cattlehealthtracker/common/app_colors.dart';
 import 'package:cattlehealthtracker/common/app_images.dart';
 import 'package:cattlehealthtracker/common/home_screen.dart';
@@ -33,6 +34,7 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
    TextEditingController emailController = TextEditingController();
       TextEditingController passwordController = TextEditingController();
+      
 
         return SafeArea(
           child: Scaffold(
@@ -128,7 +130,10 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                     }else if(state is Authentication2faState){
                       showDialog(context: context, builder:(context) {
                         return AlertDialog(
-
+                         content: OtpFormWidget(afterCancellationCallBack:() {
+                           emailController.clear();
+                           passwordController.clear();
+                         }, email: emailController.text,),
                         );
                       },);
                     }

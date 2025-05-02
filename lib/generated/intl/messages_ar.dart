@@ -27,6 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirm": MessageLookupByLibrary.simpleMessage("تأكيد"),
     "confirmLogout": MessageLookupByLibrary.simpleMessage("تأكيد الخروج"),
     "culling": MessageLookupByLibrary.simpleMessage("الإعدام"),
+    "darkMode": MessageLookupByLibrary.simpleMessage("الوضع الليلي"),
     "dashboard": MessageLookupByLibrary.simpleMessage("لوحة التحكم"),
     "email": MessageLookupByLibrary.simpleMessage("البريد الإلكتروني"),
     "emailAt": MessageLookupByLibrary.simpleMessage(
@@ -42,6 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "لا يمكن أن تكون كلمة المرور فارغة",
     ),
     "loading": MessageLookupByLibrary.simpleMessage("جارٍ التحميل..."),
+    "locale": MessageLookupByLibrary.simpleMessage("اللغة"),
     "login": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
     "loginSuccess": MessageLookupByLibrary.simpleMessage(
       "تم تسجيل الدخول بنجاح",
@@ -56,8 +58,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "passwordMinLen": MessageLookupByLibrary.simpleMessage(
       "يجب أن تكون كلمة المرور مكونة من 8 أحرف على الأقل",
     ),
+    "resend": MessageLookupByLibrary.simpleMessage("إعادة الإرسال"),
+    "resendAfter": MessageLookupByLibrary.simpleMessage("إعادة الإرسال بعد"),
     "roles": MessageLookupByLibrary.simpleMessage("الأدوار"),
     "settings": MessageLookupByLibrary.simpleMessage("الإعدادات"),
+    "twofa": MessageLookupByLibrary.simpleMessage("التحقق من الهوية بخطوتين"),
     "users": MessageLookupByLibrary.simpleMessage("المستخدمون"),
+    "verifyAfter": MessageLookupByLibrary.simpleMessage("التحقق بعد"),
+    "verifyOtp": MessageLookupByLibrary.simpleMessage("التحقق"),
   };
 }

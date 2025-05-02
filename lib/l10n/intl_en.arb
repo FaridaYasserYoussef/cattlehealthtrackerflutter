@@ -21,6 +21,13 @@
     "medicines": "Medicines",
     "settings": "Settings",
     "roles": "Roles",
-    "logout": "Logout"
+    "logout": "Logout",
+    "darkMode": "Dark mode",
+    "locale" : "Language",
+    "twofa": "Two Factor Authentication",
+    "verifyOtp": "Verify",
+    "verifyAfter": "Verify after",
+    "resendAfter": "Resend after",
+    "resend": "Resend"
   }
   

@@ -3,6 +3,7 @@ import 'package:cattlehealthtracker/api/dio_service.dart';
 import 'package:cattlehealthtracker/authentication/model/data_models/role_model.dart';
 import 'package:cattlehealthtracker/authentication/model/data_models/user_model.dart';
 import 'package:cattlehealthtracker/authentication/model/data_sources/authentication_data_source.dart';
+import 'package:cattlehealthtracker/common/custom_exceptions.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,26 +11,28 @@ import 'dart:convert';
 class AuthenticationApiDataSource extends AuthenticationDataSource{
   static DioService dioService = DioService();
   @override
-  Future<UserModel?> login(String email, String password) async{
+  Future<Map<String, dynamic>> login(String email, String password) async{
     try{
       dioService.configureDio(baseUrl: API.hostConnect);
       Response postResponse = await dioService.postRequest(API.hostConnectAuthenticationLogin,
        {
        "email":email,
        "password": password
-       },null,  null);
+       },
+      null
+       ,  null);
        print("response is ");
       print(postResponse.data);
       if(postResponse.data["detail"] == "login successful"){
         print("logins successful");
-       UserModel user = UserModel(
-        firstName: postResponse.data["user"]["first_name"], 
-        lastName: postResponse.data["user"]["last_name"], 
-        email: postResponse.data["user"]["email"], 
-        role: RoleModel(name: postResponse.data["user"]["role"],
-        features: List<String>.from(postResponse.data["user"]["features"])), 
-        mobileNumber: postResponse.data["user"]["mobile_number"], 
-        twoFaEnabled: postResponse.data["user"]["two_fa_enabled"]);
+      //  UserModel user = UserModel(
+      //   firstName: postResponse.data["user"]["first_name"], 
+      //   lastName: postResponse.data["user"]["last_name"], 
+      //   email: postResponse.data["user"]["email"], 
+      //   role: RoleModel(name: postResponse.data["user"]["role"],
+      //   features: List<String>.from(postResponse.data["user"]["features"])), 
+      //   mobileNumber: postResponse.data["user"]["mobile_number"], 
+      //   twoFaEnabled: postResponse.data["user"]["two_fa_enabled"]);
         // secure storage saving logic
         final storage = FlutterSecureStorage();
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -42,12 +45,15 @@ class AuthenticationApiDataSource extends AuthenticationDataSource{
         await storage.write(key: "access", value: postResponse.data["access"]);
  
 
-        return user;
+        
       }
       else if(postResponse.data["detail"] == "2fa-enabled"){
          final storage = FlutterSecureStorage();
          await storage.write(key: "email", value: postResponse.data["email"]);
+
+
       }
+      return postResponse.data;
     }
     catch(e){
      throw Exception(e.toString());
@@ -109,6 +115,22 @@ class AuthenticationApiDataSource extends AuthenticationDataSource{
 
 
       }
+     else if(response.statusCode != 200){
+
+     if (response.data["detail"] == "incorrect otp"){
+        throw IncorrectOtpAfterVerification(errorMessage: "Incorrect OTP", submitCoolDownEnd: response.data["otp_verify_cooldown"]);
+
+      }
+     
+     if(response.data["detail"] == "incorrect otp, surpassed otp trials"){
+       throw OtpAttemptsSurpassed(errorMessage: "too many OTP attempts");
+     }
+
+     }
+
+      
+
+      
 
 
     }
@@ -138,12 +160,12 @@ class AuthenticationApiDataSource extends AuthenticationDataSource{
   }
   
   @override
-  Future<bool?> resendOtp(String email) async{
+  Future<double?> resendOtp(String email) async{
     try{
      dioService.configureDio(baseUrl: API.hostConnect);
      Response response = await dioService.postRequest(API.hostConnectAuthenticationResendOtp,
       {"email": email}, null, null);
-      return response.data["sent"];
+      return response.data["otp_resend_cool_down"];
     }catch(e){
       throw Exception(e.toString());
     }

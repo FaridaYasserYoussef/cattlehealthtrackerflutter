@@ -5,9 +5,9 @@ class AuthenticationRepository {
     AuthenticationDataSource dataSource;
     AuthenticationRepository({required this.dataSource});
 
-    Future<UserModel?> login(String email, String password) async{
-    UserModel? user  = await dataSource.login(email, password);
-     return user;
+    Future<Map<String,dynamic>> login(String email, String password) async{
+    Map<String,dynamic> res  = await dataSource.login(email, password);
+     return res;
   }
 
   Future<bool?> changePassword(String oldPassword, String newPassword)async{
@@ -26,8 +26,8 @@ class AuthenticationRepository {
   return current2faValue;
   }
   
-  Future<bool?> resendOtp(String email) async{
-   bool? otpSent = await dataSource.resendOtp(email);
+  Future<double?> resendOtp(String email) async{
+   double? otpSent = await dataSource.resendOtp(email);
    return otpSent;
   }
 

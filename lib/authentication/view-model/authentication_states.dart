@@ -6,7 +6,11 @@ class AuthenticationInitialState extends AuthenticationStates{}
 
 class AuthenticationLoadingState extends AuthenticationStates{}
 
-class Authentication2faState extends AuthenticationStates{}
+class Authentication2faState extends AuthenticationStates{
+  final double resendCoolDownSecondsLeft;
+
+  Authentication2faState({required this.resendCoolDownSecondsLeft});
+}
 
 class LoginSuccessState extends AuthenticationStates{
   final UserModel user;
@@ -39,6 +43,26 @@ class AuthenticationErrorState extends AuthenticationStates{
   VerifyOtpSuccessState({required this.user});
   }
 
-  class ResendOtpSuccessState extends AuthenticationStates{}
+  class VerifyOtpErrorState extends AuthenticationStates{
+      final String errorMessage;
+    final double submitCoolDownSecondsEnd;
+
+  VerifyOtpErrorState({required this.errorMessage, required this.submitCoolDownSecondsEnd});
+
+  }
+
+  class SurpassedAttemptsOtpErrorState extends AuthenticationStates{
+          final String errorMessage;
+
+  SurpassedAttemptsOtpErrorState({required this.errorMessage});
+
+  }
+
+  class ResendOtpSuccessState extends AuthenticationStates{
+    final double resendCoolDownSecondsLeft;
+
+  ResendOtpSuccessState({required this.resendCoolDownSecondsLeft});
+
+  }
 
   class LogoutSuccessState extends AuthenticationStates{}

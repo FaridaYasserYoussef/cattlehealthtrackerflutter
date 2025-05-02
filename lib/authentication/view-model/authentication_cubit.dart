@@ -1,6 +1,7 @@
 import 'package:cattlehealthtracker/authentication/model/data_models/user_model.dart';
 import 'package:cattlehealthtracker/authentication/repository/authentication_repository.dart';
 import 'package:cattlehealthtracker/authentication/view-model/authentication_states.dart';
+import 'package:cattlehealthtracker/common/custom_exceptions.dart';
 import 'package:cattlehealthtracker/common/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,8 +16,15 @@ class AuthenticationCubit extends Cubit<AuthenticationStates>{
   Future<void> login(String email, String password) async{
     try{
       emit(AuthenticationLoadingState());
-      UserModel? user = await repository.login(email, password);
-      emit(LoginSuccessState(user: user!));
+      Map<String,dynamic> result = await repository.login(email, password);
+      if(result["detail"] == "login successful"){
+        // construct user from userModel fromJson
+        UserModel user = UserModel.fromJson(result["user"]);
+        emit(LoginSuccessState(user: user));
+
+      }else{
+        emit(Authentication2faState(resendCoolDownSecondsLeft: result['resend_cooldown']));
+      }
       
 
     }catch(e){
@@ -40,6 +48,12 @@ class AuthenticationCubit extends Cubit<AuthenticationStates>{
       UserModel? user = await repository.verifyOtp(otp);
       emit(VerifyOtpSuccessState(user: user!));
       }catch(e){
+        if( e is IncorrectOtpAfterVerification){
+          emit(VerifyOtpErrorState(errorMessage: e.errorMessage, submitCoolDownSecondsEnd: e.submitCoolDownEnd));
+        }
+        if (e is OtpAttemptsSurpassed){
+          emit(SurpassedAttemptsOtpErrorState(errorMessage: e.errorMessage));
+        }
         emit(AuthenticationErrorState(errorMessage: e.toString()));
       }
     }
@@ -57,8 +71,8 @@ class AuthenticationCubit extends Cubit<AuthenticationStates>{
      Future<void> resendOtp(String email) async{
        try{
         emit(AuthenticationLoadingState());
-        await repository.resendOtp(email);
-        emit(ResendOtpSuccessState());
+        double? resendCoolDownSecondsLeft =  await repository.resendOtp(email);
+        emit(ResendOtpSuccessState(resendCoolDownSecondsLeft: resendCoolDownSecondsLeft!));
        }catch(e){
         emit(AuthenticationErrorState(errorMessage: e.toString()));
        }

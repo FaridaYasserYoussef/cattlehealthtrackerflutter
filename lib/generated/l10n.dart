@@ -209,6 +209,56 @@ class S {
   String get logout {
     return Intl.message('Logout', name: 'logout', desc: '', args: []);
   }
+
+  /// `Dark mode`
+  String get darkMode {
+    return Intl.message('Dark mode', name: 'darkMode', desc: '', args: []);
+  }
+
+  /// `Language`
+  String get locale {
+    return Intl.message('Language', name: 'locale', desc: '', args: []);
+  }
+
+  /// `Two Factor Authentication`
+  String get twofa {
+    return Intl.message(
+      'Two Factor Authentication',
+      name: 'twofa',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verify`
+  String get verifyOtp {
+    return Intl.message('Verify', name: 'verifyOtp', desc: '', args: []);
+  }
+
+  /// `Verify after`
+  String get verifyAfter {
+    return Intl.message(
+      'Verify after',
+      name: 'verifyAfter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resend after`
+  String get resendAfter {
+    return Intl.message(
+      'Resend after',
+      name: 'resendAfter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resend`
+  String get resend {
+    return Intl.message('Resend', name: 'resend', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

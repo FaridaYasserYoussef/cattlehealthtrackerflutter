@@ -1,5 +1,7 @@
 class API{
   static const hostConnect = "https://due-crista-arabic-historiograhy-bab865db.koyeb.app";// uncommented when redeploying
+  // static const hostConnect = "http://192.168.1.16:8000";// commented when redeploying
+
   static const refreshTokenEnpoint = "/api/token/refresh/";
   static const hostConnectAuthentication = "/auth";
   static const hostConnectAuthenticationLogin = "$hostConnectAuthentication/custom_login";

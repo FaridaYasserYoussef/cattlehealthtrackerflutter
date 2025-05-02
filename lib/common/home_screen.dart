@@ -86,6 +86,7 @@ Future<String> getfeatures() async{
           drawer: Drawer(
             backgroundColor: Theme.of(context).brightness == Brightness.light? AppColors.backgroundColorLight: AppColors.backgroundColorDark,
             child: Column(children: [
+              
                 Padding(
                   padding:  EdgeInsets.only(top: 45.h),
                   child: Image(image: AssetImage(Theme.of(context).brightness == Brightness.light? AppImages.logo_light:AppImages.logo_dark,),
@@ -93,6 +94,8 @@ Future<String> getfeatures() async{
                   height: 130.h,
                   ),
                 ),
+
+                // Divider(),
         
                 Expanded(child: ListView.builder(
                   itemCount: featuresList.length,
@@ -131,14 +134,19 @@ Future<String> getfeatures() async{
                         });
                       }
                     },
-                    child: ListTile(
-                      title: Text(featuresLocalized[featuresList[index]]!),
-                      leading: featuresList[index] == "Logout"? BlocBuilder<AuthenticationCubit, AuthenticationStates>(builder:(context, state) {
-                        if(state is AuthenticationLoadingState){
-                          return CircularProgressIndicator(color: AppColors.greenColor,);
-                        }
-                        return featuresMap[featuresList[index]]![0];
-                      },) :featuresMap[featuresList[index]]![0],
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: featuresList[index] == "Logout"? Border( top: BorderSide(color: Theme.of(context).secondaryHeaderColor), bottom: BorderSide(color: Theme.of(context).secondaryHeaderColor)) :Border( top: BorderSide(color: Theme.of(context).secondaryHeaderColor))
+                      ),
+                      child: ListTile(
+                        title: Text(featuresLocalized[featuresList[index]]!),
+                        leading: featuresList[index] == "Logout"? BlocBuilder<AuthenticationCubit, AuthenticationStates>(builder:(context, state) {
+                          if(state is AuthenticationLoadingState){
+                            return CircularProgressIndicator(color: AppColors.greenColor,);
+                          }
+                          return featuresMap[featuresList[index]]![0];
+                        },) :featuresMap[featuresList[index]]![0],
+                      ),
                     ),
                   );
                 },))

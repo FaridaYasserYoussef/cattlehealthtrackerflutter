@@ -27,6 +27,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
     "confirmLogout": MessageLookupByLibrary.simpleMessage("Confirm logout"),
     "culling": MessageLookupByLibrary.simpleMessage("Culling"),
+    "darkMode": MessageLookupByLibrary.simpleMessage("Dark mode"),
     "dashboard": MessageLookupByLibrary.simpleMessage("Dashboard"),
     "email": MessageLookupByLibrary.simpleMessage("Email"),
     "emailAt": MessageLookupByLibrary.simpleMessage("Email must contain @"),
@@ -38,6 +39,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Password can\'t be empty",
     ),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
+    "locale": MessageLookupByLibrary.simpleMessage("Language"),
     "login": MessageLookupByLibrary.simpleMessage("Login"),
     "loginSuccess": MessageLookupByLibrary.simpleMessage("Login Successful"),
     "logout": MessageLookupByLibrary.simpleMessage("Logout"),
@@ -48,8 +50,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "passwordMinLen": MessageLookupByLibrary.simpleMessage(
       "Password is at least 8 characters",
     ),
+    "resend": MessageLookupByLibrary.simpleMessage("Resend"),
+    "resendAfter": MessageLookupByLibrary.simpleMessage("Resend after"),
     "roles": MessageLookupByLibrary.simpleMessage("Roles"),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+    "twofa": MessageLookupByLibrary.simpleMessage("Two Factor Authentication"),
     "users": MessageLookupByLibrary.simpleMessage("Users"),
+    "verifyAfter": MessageLookupByLibrary.simpleMessage("Verify after"),
+    "verifyOtp": MessageLookupByLibrary.simpleMessage("Verify"),
   };
 }

@@ -60,7 +60,7 @@ class DioService {
          if(e.response?.statusCode == 401){
            if (e.response?.data["error"] == "Refresh token expired") {
               AuthenticationCubit cubit = GetIt.instance<AuthenticationCubit>();
-              await cubit.logout(); 
+              await cubit.logoutLocally(); 
               return;
 
             }

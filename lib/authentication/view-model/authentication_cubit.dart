@@ -5,29 +5,35 @@ import 'package:cattlehealthtracker/common/custom_exceptions.dart';
 import 'package:cattlehealthtracker/common/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class AuthenticationCubit extends Cubit<AuthenticationStates>{
     AuthenticationRepository repository;
-
-  AuthenticationCubit(): repository = AuthenticationRepository(dataSource: ServiceLocator.authenticationDataSource), super(AuthenticationInitialState());
+    FlutterSecureStorage storage;
+  AuthenticationCubit({required this.storage}): repository = AuthenticationRepository(dataSource: ServiceLocator.getAuthenticationDataSource(storage), storage: storage), super(AuthenticationInitialState());
+  AuthenticationCubit.test(this.repository, this.storage): super(AuthenticationInitialState());
   
-
   Future<void> login(String email, String password) async{
     try{
       emit(AuthenticationLoadingState());
       Map<String,dynamic> result = await repository.login(email, password);
       if(result["detail"] == "login successful"){
         // construct user from userModel fromJson
+        print("login is successful clause");
         UserModel user = UserModel.fromJson(result["user"]);
         emit(LoginSuccessState(user: user));
+        print("success state emitted");
 
       }else{
+        print("2fa state emitted");
         emit(Authentication2faState(resendCoolDownSecondsLeft: result['resend_cooldown']));
       }
       
 
     }catch(e){
+      print("error state emitted");
+      print(e.toString());
       emit(AuthenticationErrorState(errorMessage: e.toString()));
       Fluttertoast.showToast(msg: e.toString(), backgroundColor: Colors.red);
     }
@@ -42,19 +48,24 @@ class AuthenticationCubit extends Cubit<AuthenticationStates>{
         emit(AuthenticationErrorState(errorMessage:e.toString()));
       }
     }
-    Future<void> verifyOtp(String otp) async{
+    Future<void> verifyOtp(String otp, String email) async{
       try{
-      emit(AuthenticationLoadingState());
-      UserModel? user = await repository.verifyOtp(otp);
+      emit(OtpSubmitLoadingState());
+      UserModel? user = await repository.verifyOtp(otp, email);
       emit(VerifyOtpSuccessState(user: user!));
       }catch(e){
         if( e is IncorrectOtpAfterVerification){
+          print("the otp is incorrect");
           emit(VerifyOtpErrorState(errorMessage: e.errorMessage, submitCoolDownSecondsEnd: e.submitCoolDownEnd));
         }
-        if (e is OtpAttemptsSurpassed){
+        else if (e is OtpAttemptsSurpassed){
+          print("you surpassed surpassed your 3 OTP attempsts");
           emit(SurpassedAttemptsOtpErrorState(errorMessage: e.errorMessage));
         }
+        else{
         emit(AuthenticationErrorState(errorMessage: e.toString()));
+
+        }
       }
     }
      Future<void> toggle2fa() async{
@@ -70,7 +81,7 @@ class AuthenticationCubit extends Cubit<AuthenticationStates>{
      
      Future<void> resendOtp(String email) async{
        try{
-        emit(AuthenticationLoadingState());
+        emit(OtpResendLoadingState());
         double? resendCoolDownSecondsLeft =  await repository.resendOtp(email);
         emit(ResendOtpSuccessState(resendCoolDownSecondsLeft: resendCoolDownSecondsLeft!));
        }catch(e){
@@ -81,7 +92,7 @@ class AuthenticationCubit extends Cubit<AuthenticationStates>{
 
       Future<void> logout() async{
        try{
-        emit(AuthenticationLoadingState());
+        emit(LogoutLoadingState());
         await repository.logout();
         emit(LogoutSuccessState());
        }catch(e){
@@ -92,10 +103,12 @@ class AuthenticationCubit extends Cubit<AuthenticationStates>{
 
      Future<void> logoutLocally() async{
        try{
-        emit(AuthenticationLoadingState());
+        emit(LogoutLoadingState());
         await repository.logoutLocally();
         emit(LogoutSuccessState());
        }catch(e){
+        print("in logout locally error cubit");
+        print(e.toString());
         emit(AuthenticationErrorState(errorMessage: e.toString()));
        }
 

@@ -23,7 +23,9 @@ import 'dart:convert';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  FlutterSecureStorage storage;
+  GlobalKey<ScaffoldState> scaffoldKey;
+   HomeScreen({required this.storage, required this.scaffoldKey, super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -49,15 +51,14 @@ class _HomeScreenState extends State<HomeScreen> {
 @override
   void initState() {
     // TODO: implement initState
-   
+   print("got to home screen");
     super.initState();
   }
 
-Future<String> getfeatures() async{
-    final storage  = FlutterSecureStorage();
-    String? features = await storage.read(key: "features");
-    return features!;
-}
+// Future<String> getfeatures() async{
+//     String? features = await widget.storage.read(key: "features");
+//     return features!;
+// }
   @override
   Widget build(BuildContext context) {
     Map<String,String> featuresLocalized = {
@@ -74,7 +75,7 @@ Future<String> getfeatures() async{
 
     };
     return  FutureBuilder(
-      future: getfeatures(),
+      future: widget.storage.read(key: "features"),
       builder: (context, snapshot) {
         if(snapshot.connectionState == ConnectionState.waiting){
           return Scaffold(body: Center(child: CircularProgressIndicator(),),);
@@ -82,8 +83,11 @@ Future<String> getfeatures() async{
         else if(snapshot.hasData){
           featuresList = json.decode(snapshot.data!).cast<String>().toList();
           featuresList.add("Logout");
+          print("features list contents $featuresList");
         return Scaffold(
+          key: widget.scaffoldKey,
           drawer: Drawer(
+            
             backgroundColor: Theme.of(context).brightness == Brightness.light? AppColors.backgroundColorLight: AppColors.backgroundColorDark,
             child: Column(children: [
               
@@ -98,6 +102,7 @@ Future<String> getfeatures() async{
                 // Divider(),
         
                 Expanded(child: ListView.builder(
+                  key: Key('drawerListView'),
                   itemCount: featuresList.length,
                   itemBuilder:(context, index) {
                   return GestureDetector(
@@ -140,8 +145,9 @@ Future<String> getfeatures() async{
                       ),
                       child: ListTile(
                         title: Text(featuresLocalized[featuresList[index]]!),
+                        key: Key(featuresLocalized[featuresList[index]]!),
                         leading: featuresList[index] == "Logout"? BlocBuilder<AuthenticationCubit, AuthenticationStates>(builder:(context, state) {
-                          if(state is AuthenticationLoadingState){
+                          if(state is LogoutLoadingState){
                             return CircularProgressIndicator(color: AppColors.greenColor,);
                           }
                           return featuresMap[featuresList[index]]![0];

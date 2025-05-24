@@ -9,7 +9,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 class AuthenticationApiDataSource extends AuthenticationDataSource{
+  final FlutterSecureStorage storage;
   static DioService dioService = DioService();
+
+  AuthenticationApiDataSource({required this.storage});
   @override
   Future<Map<String, dynamic>> login(String email, String password) async{
     try{
@@ -84,20 +87,22 @@ class AuthenticationApiDataSource extends AuthenticationDataSource{
   }
   
   @override
-  Future<UserModel?> verifyOtp(String otp) async{
-    try{
+  Future<UserModel?> verifyOtp(String otp, String email) async{
+    // try{
       dioService.configureDio(baseUrl: API.hostConnect);
       Response response = await dioService.postRequest(API.hostConnectAuthenticationOtp, 
       {
-         "otp": otp
+         "otp": otp,
+         "email": email
       }, null, null);
+      print(response.data);
       if(response.statusCode == 200){
         UserModel user = UserModel(
           firstName: response.data["user"]["first_name"], 
         lastName: response.data["user"]["last_name"], 
         email: response.data["user"]["email"], 
         role: RoleModel(name: response.data["user"]["role"],
-        features: response.data["user"]["features"]), 
+        features: List<String>.from(response.data["user"]["features"])), 
         mobileNumber: response.data["user"]["mobile_number"], 
         twoFaEnabled: response.data["user"]["two_fa_enabled"]);
             final storage = FlutterSecureStorage();
@@ -106,7 +111,7 @@ class AuthenticationApiDataSource extends AuthenticationDataSource{
         await prefs.setBool("twoFaEnabled", response.data["user"]["two_fa_enabled"]);
         await storage.write(key: "email", value: response.data["user"]["email"]);
         await storage.write(key: "phone", value:  response.data["user"]["mobile_number"]);
-        await storage.write(key: "features", value: response.data["user"]["features"].toString());
+        await storage.write(key: "features", value: jsonEncode(response.data["user"]["features"]));
         await storage.write(key: "refresh", value: response.data["refresh"]);
         await storage.write(key: "access", value: response.data["access"]);
  
@@ -118,6 +123,7 @@ class AuthenticationApiDataSource extends AuthenticationDataSource{
      else if(response.statusCode != 200){
 
      if (response.data["detail"] == "incorrect otp"){
+      print("incorrect trigerred");
         throw IncorrectOtpAfterVerification(errorMessage: "Incorrect OTP", submitCoolDownEnd: response.data["otp_verify_cooldown"]);
 
       }
@@ -125,6 +131,9 @@ class AuthenticationApiDataSource extends AuthenticationDataSource{
      if(response.data["detail"] == "incorrect otp, surpassed otp trials"){
        throw OtpAttemptsSurpassed(errorMessage: "too many OTP attempts");
      }
+     else{
+      throw(Exception());
+     }
 
      }
 
@@ -133,10 +142,11 @@ class AuthenticationApiDataSource extends AuthenticationDataSource{
       
 
 
-    }
-    catch(e){
-      throw Exception(e.toString());
-    }
+    // }
+    // catch(e){
+
+    //   throw Exception(e.toString());
+    // }
   }
   
   @override
@@ -214,7 +224,7 @@ class AuthenticationApiDataSource extends AuthenticationDataSource{
   @override
   Future<bool?> logoutLocally() async{
        try{
-        final storage = FlutterSecureStorage();
+        // final storage = FlutterSecureStorage();
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool("isLoggedIn", false);
         await prefs.remove("twoFaEnabled");

@@ -70,6 +70,11 @@ class S {
     return Intl.message('Password', name: 'password', desc: '', args: []);
   }
 
+  /// `Continue`
+  String get Continue {
+    return Intl.message('Continue', name: 'Continue', desc: '', args: []);
+  }
+
   /// `Loading...`
   String get loading {
     return Intl.message('Loading...', name: 'loading', desc: '', args: []);
@@ -80,6 +85,36 @@ class S {
     return Intl.message(
       'Email can\'t be empty',
       name: 'emptyEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OTP must be 6 digits`
+  String get emptyOTP {
+    return Intl.message(
+      'OTP must be 6 digits',
+      name: 'emptyOTP',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You entered an incorrect OTP`
+  String get incorrectOTP {
+    return Intl.message(
+      'You entered an incorrect OTP',
+      name: 'incorrectOTP',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You exceeded your 4 OTP Attempts`
+  String get OTPAttemptsExceeded {
+    return Intl.message(
+      'You exceeded your 4 OTP Attempts',
+      name: 'OTPAttemptsExceeded',
       desc: '',
       args: [],
     );
@@ -220,14 +255,9 @@ class S {
     return Intl.message('Language', name: 'locale', desc: '', args: []);
   }
 
-  /// `Two Factor Authentication`
+  /// `2F Authentication`
   String get twofa {
-    return Intl.message(
-      'Two Factor Authentication',
-      name: 'twofa',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('2F Authentication', name: 'twofa', desc: '', args: []);
   }
 
   /// `Verify`

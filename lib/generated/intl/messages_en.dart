@@ -22,6 +22,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "Continue": MessageLookupByLibrary.simpleMessage("Continue"),
+    "OTPAttemptsExceeded": MessageLookupByLibrary.simpleMessage(
+      "You exceeded your 4 OTP Attempts",
+    ),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "cattle": MessageLookupByLibrary.simpleMessage("Cattle"),
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
@@ -35,8 +39,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "Email must end with .com",
     ),
     "emptyEmail": MessageLookupByLibrary.simpleMessage("Email can\'t be empty"),
+    "emptyOTP": MessageLookupByLibrary.simpleMessage("OTP must be 6 digits"),
     "emptyPassword": MessageLookupByLibrary.simpleMessage(
       "Password can\'t be empty",
+    ),
+    "incorrectOTP": MessageLookupByLibrary.simpleMessage(
+      "You entered an incorrect OTP",
     ),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
     "locale": MessageLookupByLibrary.simpleMessage("Language"),
@@ -54,7 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "resendAfter": MessageLookupByLibrary.simpleMessage("Resend after"),
     "roles": MessageLookupByLibrary.simpleMessage("Roles"),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
-    "twofa": MessageLookupByLibrary.simpleMessage("Two Factor Authentication"),
+    "twofa": MessageLookupByLibrary.simpleMessage("2F Authentication"),
     "users": MessageLookupByLibrary.simpleMessage("Users"),
     "verifyAfter": MessageLookupByLibrary.simpleMessage("Verify after"),
     "verifyOtp": MessageLookupByLibrary.simpleMessage("Verify"),

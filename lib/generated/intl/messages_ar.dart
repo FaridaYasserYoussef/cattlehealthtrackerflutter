@@ -22,6 +22,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "Continue": MessageLookupByLibrary.simpleMessage("متابعة"),
+    "OTPAttemptsExceeded": MessageLookupByLibrary.simpleMessage(
+      "لقد تجاوزت الحد الأقصى لمحاولات رمز التحقق",
+    ),
     "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
     "cattle": MessageLookupByLibrary.simpleMessage("الماشية"),
     "confirm": MessageLookupByLibrary.simpleMessage("تأكيد"),
@@ -39,8 +43,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "emptyEmail": MessageLookupByLibrary.simpleMessage(
       "لا يمكن أن يكون البريد الإلكتروني فارغًا",
     ),
+    "emptyOTP": MessageLookupByLibrary.simpleMessage(
+      "يجب أن يتكون رمز التحقق من 6 أرقام",
+    ),
     "emptyPassword": MessageLookupByLibrary.simpleMessage(
       "لا يمكن أن تكون كلمة المرور فارغة",
+    ),
+    "incorrectOTP": MessageLookupByLibrary.simpleMessage(
+      "لقد أدخلت رمز التحقق بشكل غير صحيح.",
     ),
     "loading": MessageLookupByLibrary.simpleMessage("جارٍ التحميل..."),
     "locale": MessageLookupByLibrary.simpleMessage("اللغة"),

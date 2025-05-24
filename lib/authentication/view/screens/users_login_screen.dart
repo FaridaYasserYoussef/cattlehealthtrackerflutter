@@ -12,11 +12,14 @@ import 'package:cattlehealthtracker/settings/view-model/settings_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class UserLoginScreen extends StatefulWidget {
-  const UserLoginScreen({super.key});
-
+  FlutterSecureStorage storage;
+  GlobalKey<ScaffoldState> scaffoldKey;
+   UserLoginScreen({required this.storage, required this.scaffoldKey ,super.key});
+  
   @override
   State<UserLoginScreen> createState() => _UserLoginScreenState();
 }
@@ -33,8 +36,7 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
   Widget build(BuildContext context) {
    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
    TextEditingController emailController = TextEditingController();
-      TextEditingController passwordController = TextEditingController();
-      
+   TextEditingController passwordController = TextEditingController();
 
         return SafeArea(
           child: Scaffold(
@@ -123,12 +125,16 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                     listener:(context, state) {
                     if(state is LoginSuccessState || state is VerifyOtpSuccessState){
                       Fluttertoast.showToast(msg: S.of(context).loginSuccess, backgroundColor: AppColors.greenColor, );
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(context) => HomeScreen(),));
+                      print("login is successful");
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(context) => HomeScreen(storage: widget.storage, scaffoldKey: widget.scaffoldKey,),));
                     }
                     else if(state is AuthenticationErrorState){
                       Fluttertoast.showToast(msg: state.errorMessage, backgroundColor: Colors.red, );
                     }else if(state is Authentication2faState){
-                      showDialog(context: context, builder:(context) {
+                      showDialog(
+                        barrierDismissible: false,
+                        context: context, builder:(context) {
+
                         return AlertDialog(
                          content: OtpFormWidget(afterCancellationCallBack:() {
                            emailController.clear();

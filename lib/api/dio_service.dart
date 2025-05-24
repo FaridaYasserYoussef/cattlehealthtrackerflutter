@@ -7,15 +7,34 @@ import 'package:get_it/get_it.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 class DioService {
   // create a private constructor
-  DioService._privateConstructor();
-  // instance of private constructor 
-  // final keeps the field unmodified
-  static final _instance = DioService._privateConstructor();
-  
-  factory DioService(){
-    return _instance;
+
+  // private constructor
+  DioService._internal();
+
+  static DioService? _instance;
+
+  factory DioService() {
+    _instance ??= DioService._internal();
+    return _instance!;
   }
   late Dio _dio;
+
+   Dio getDioInstance(){
+    return _dio;
+  }
+
+  Future<Response> _executeWithTimeout(Future<Response> future){
+     return future.timeout(
+      const Duration(seconds: 30),
+      onTimeout: () {
+        throw DioException(
+          requestOptions: RequestOptions(path: ''),
+          type: DioExceptionType.connectionTimeout,
+          error: "Manual timeout: request took too long to connect"
+        );
+      },
+     );
+  }
 
   void configureDio({
     required String baseUrl,
@@ -29,8 +48,8 @@ class DioService {
    
    _dio = Dio(BaseOptions(
     baseUrl: baseUrl,
-    connectTimeout: connectTimeout ?? const Duration(seconds: 30),
-    receiveTimeout: receiveTimeout ?? const Duration(seconds: 30),
+    connectTimeout: connectTimeout ?? const Duration(seconds: 20),
+    receiveTimeout: receiveTimeout ?? const Duration(seconds: 20),
     headers: defaultHeaders ?? 
     {
       'Content-Type': 'application/json',
@@ -51,17 +70,23 @@ class DioService {
         },
         onResponse: onResponse ??
         (response, handler){
+          print('Response: ${response.statusCode} ${response.data}');
           debugPrint('Response: ${response.statusCode} ${response.data}');
           handler.next(response);
         },
         onError: onError ??
         (DioException e, handler)async{
+           print("Interceptor error triggered");
           try{
+            if(e.response?.statusCode == 400 || e.response?.statusCode == 403 || e.response?.statusCode == 429){
+               return handler.resolve(e.response!);
+            }
          if(e.response?.statusCode == 401){
            if (e.response?.data["error"] == "Refresh token expired") {
               AuthenticationCubit cubit = GetIt.instance<AuthenticationCubit>();
-              await cubit.logoutLocally(); 
-              return;
+              print("logging out locally");
+              await cubit.logoutLocally();
+              return handler.reject(e); 
 
             }
           String oldAuth = e.requestOptions.headers["Authorization"];
@@ -79,14 +104,11 @@ class DioService {
               options: Options(
                 method: e.requestOptions.method,
                 headers: {
-                  // ...e.requestOptions.headers,
                   "Authorization": newAuth
                   }
               )
             );
-        // final response = await _dio.fetch(e.requestOptions);
 
-        // return handler.resolve(response);
           return handler.resolve(clonedRequest);
 
           }
@@ -119,11 +141,11 @@ List<String?>? newTokens = [response.data["access"], response.data["refresh"]];
   Future<Response> getRequest(String endpoint,
   {Map<String, dynamic>? queryParameters})async{
     try{
-      Response response = await _dio.get(
+      final response =  _dio.get(
         endpoint,
         queryParameters: queryParameters
       );
-    return response;
+    return await _executeWithTimeout(response);
     }catch(e){
       rethrow;
     }
@@ -133,7 +155,7 @@ List<String?>? newTokens = [response.data["access"], response.data["refresh"]];
   Map<String, dynamic>? data,
   Map<String, dynamic>? queryParameters, Map<String, dynamic>? headers) async {
     try{
-      Response response = await _dio.post(
+      final response =  _dio.post(
         endpoint,
         data: data,
         queryParameters: queryParameters,
@@ -141,7 +163,7 @@ List<String?>? newTokens = [response.data["access"], response.data["refresh"]];
           headers: headers
         )
       );
-      return response;
+      return await _executeWithTimeout(response);
     }catch(e){
       rethrow;
     }

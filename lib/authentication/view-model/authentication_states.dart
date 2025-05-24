@@ -64,5 +64,7 @@ class AuthenticationErrorState extends AuthenticationStates{
   ResendOtpSuccessState({required this.resendCoolDownSecondsLeft});
 
   }
-
-  class LogoutSuccessState extends AuthenticationStates{}
+class LogoutSuccessState extends AuthenticationStates{}
+class LogoutLoadingState extends AuthenticationStates{}
+class OtpResendLoadingState extends AuthenticationStates{}
+class OtpSubmitLoadingState extends AuthenticationStates{}

@@ -1,9 +1,11 @@
 import 'package:cattlehealthtracker/authentication/model/data_models/user_model.dart';
 import 'package:cattlehealthtracker/authentication/model/data_sources/authentication_data_source.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthenticationRepository {
     AuthenticationDataSource dataSource;
-    AuthenticationRepository({required this.dataSource});
+    FlutterSecureStorage storage;
+    AuthenticationRepository({required this.dataSource, required this.storage});
 
     Future<Map<String,dynamic>> login(String email, String password) async{
     Map<String,dynamic> res  = await dataSource.login(email, password);
@@ -16,8 +18,8 @@ class AuthenticationRepository {
   }
 
 
-  Future<UserModel?> verifyOtp(String otp) async{
-   UserModel? user  = await dataSource.verifyOtp(otp);
+  Future<UserModel?> verifyOtp(String otp, String email) async{
+   UserModel? user  = await dataSource.verifyOtp(otp, email);
      return user;
   }
   

@@ -55,6 +55,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       currentTheme = snapshot.data![0];
                       }
                        return Switch(
+                        key: const Key('darkModeSwitch'),
                         // thumbColor: WidgetStateProperty.all(AppColors.greenColor),
                         // trackColor: WidgetStateProperty.all(Colors.grey),
                         activeColor: AppColors.greenColor,
@@ -123,6 +124,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       }
 
                        return Switch(
+                            key: const Key('toggle2faSwitch'),
                             activeColor: AppColors.greenColor,
                             value: current_two_fa_state, 
                             onChanged: (val)async{

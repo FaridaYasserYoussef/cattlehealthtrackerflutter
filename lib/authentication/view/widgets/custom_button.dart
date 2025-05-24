@@ -15,7 +15,10 @@ class CustomButton extends StatelessWidget {
       child: ElevatedButton(
         style: Theme.of(context).elevatedButtonTheme.style!.copyWith(backgroundColor: bgColor != null? WidgetStatePropertyAll(bgColor): null,   padding: WidgetStatePropertyAll(EdgeInsets.only(top: 2.h))),
         onPressed:onTap, 
-      child: Text(text, style: Theme.of(context).textTheme.bodyLarge)
+      child: Padding(
+        padding:  EdgeInsets.symmetric(horizontal: 8.w),
+        child: Text(text, style: Theme.of(context).textTheme.bodyLarge),
+      )
       ),
     );
   }

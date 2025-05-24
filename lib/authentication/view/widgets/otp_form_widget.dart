@@ -4,11 +4,13 @@ import 'package:cattlehealthtracker/authentication/view-model/authentication_cub
 import 'package:cattlehealthtracker/authentication/view-model/authentication_states.dart';
 import 'package:cattlehealthtracker/authentication/view/widgets/custom_button.dart';
 import 'package:cattlehealthtracker/authentication/view/widgets/otp_text_field.dart';
+import 'package:cattlehealthtracker/common/custom_exceptions.dart';
 import 'package:cattlehealthtracker/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 
 
@@ -26,10 +28,17 @@ bool sendClickedBefore  = false;
 int resendAfter= 10;
 bool resendDisabled = true;
 bool submitDisabled = false;
-int submitAfter = 10;
+int submitAfter = 0;
  Timer? resendTimer;
  Timer? submitTimer;
-AuthenticationCubit authCubit  = GetIt.instance<AuthenticationCubit>();
+ final FocusNode firstTextFieldFocusNode = FocusNode();
+// AuthenticationCubit authCubit  = GetIt.instance<AuthenticationCubit>();
+
+ @override
+  void dispose() {
+    firstTextFieldFocusNode.dispose();
+    super.dispose();
+  }
 @override
   void initState() {
     // TODO: implement initState
@@ -42,7 +51,7 @@ void startResendTimer(){
     if(resendAfter == 0){
       setState(() {
         resendDisabled = false;
-        resendTimer!.cancel();  
+        resendTimer!.cancel();
       });
     }else{
       setState(() {
@@ -76,71 +85,21 @@ Widget build(BuildContext context) {
           child: Directionality(
             textDirection:TextDirection.ltr,
             child: Row(
-              // textDirection: TextDirection.ltr,
-              children: [
-              // the textfields go here
-             OtpTextField(
-              placeholder: "0",
-              controller: controllerList[0],
+              textDirection: TextDirection.ltr,
+              children: List.generate(6, (index){
+                return OtpTextField(
+                  focusNode: index == 0? firstTextFieldFocusNode: null,
+              placeholder: index.toString(),
+              controller: controllerList[index],
               onChanged:(p0) {
-                  if(p0.length == 1){
+                  if(p0.length == 1 && index < 5){
                     FocusScope.of(context).nextFocus();
+                  } else if(p0.length == 0 && index > 0){
+                    FocusScope.of(context).previousFocus();
                   }
               },
-             ),
-            
-            OtpTextField(
-              placeholder: "1",
-              controller: controllerList[1],
-              onChanged:(p0) {
-                  if(p0.length == 1){
-                    FocusScope.of(context).nextFocus();
-                  }
-              },
-             ),
-            
-              OtpTextField(
-                placeholder: "2",
-              controller: controllerList[2],
-              onChanged:(p0) {
-                  if(p0.length == 1){
-                    FocusScope.of(context).nextFocus();
-                  }
-              },
-             ),
-             
-               OtpTextField(
-                placeholder: "3",
-              controller: controllerList[3],
-              onChanged:(p0) {
-                  if(p0.length == 1){
-                    FocusScope.of(context).nextFocus();
-                  }
-              },
-             ),
-            
-            OtpTextField(
-              placeholder: "4",
-              controller: controllerList[4],
-              onChanged:(p0) {
-                  if(p0.length == 1){
-                    FocusScope.of(context).nextFocus();
-                  }
-              },
-             ),
-            
-            
-               OtpTextField(
-                placeholder: "5",
-              controller: controllerList[5],
-              onChanged:(p0) {
-                  if(p0.length == 1){
-                    FocusScope.of(context).nextFocus();
-                  }
-              },
-             ),
-            
-            ],
+             );
+              }),
             
             ),
           ),
@@ -164,14 +123,24 @@ Widget build(BuildContext context) {
                       
             },
             child: BlocBuilder<AuthenticationCubit, AuthenticationStates>(builder:(context, state) {
-              if(resendTimer!.isActive || state is AuthenticationLoadingState){
+       
+
+              if(resendTimer!.isActive || state is OtpResendLoadingState){
                  return Padding(
                    padding:  EdgeInsets.only(bottom: 10.h),
                    child: SizedBox(
                   height: 65.h,
 
                     width: double.infinity,
-                    child: CustomButton(text:S.of(context).resendAfter + " ${resendAfter}")),
+                    child: CustomButton(text: resendAfter == 0?
+                                          (
+                                            state is OtpResendLoadingState?
+                                              S.of(context).resend + "...":
+                                              S.of(context).resend
+                                          ) 
+                                        
+                                        :
+                                        S.of(context).resendAfter + " ${resendAfter}")),
                  );
               }
               return Padding(
@@ -179,9 +148,13 @@ Widget build(BuildContext context) {
                 child: SizedBox(
                   height: 65.h,
                   width: double.infinity,
-                  child: CustomButton(text:S.of(context).resend, onTap: () async{
+                  child: CustomButton(text:S.of(context).resend, onTap: state is OtpSubmitLoadingState || state is OtpResendLoadingState? null : () async{
+                    // setState(() {
+                    //   resendAfter = 10;
+                    // });
                     startResendTimer();
-                    await authCubit.resendOtp(widget.email); // to do
+                    // await authCubit.resendOtp(widget.email); // to do
+                    await context.read<AuthenticationCubit>().resendOtp(widget.email);
                   },),
                 ),
               );
@@ -194,8 +167,22 @@ Widget build(BuildContext context) {
             // if state is SurPassed attempts pop
            if(state is SurpassedAttemptsOtpErrorState){
             // call back function from login that resets all textfields
-            widget.afterCancellationCallBack();
-            Navigator.of(context).pop();
+           widget.afterCancellationCallBack();
+                Navigator.of(context).pop();
+                showDialog(context: context, builder:(context) {
+                  return AlertDialog(
+                    actionsAlignment: MainAxisAlignment.center,
+                  content: Text(S.of(context).OTPAttemptsExceeded, style: Theme.of(context).textTheme.bodyLarge,),
+                  actions: [
+                    CustomButton(
+                    text: S.of(context).Continue,
+                    onTap: () async{
+                      Navigator.of(context).pop();
+                    },
+                    ),
+                  ],
+                  );
+                },);
            }
           
            if(state is  VerifyOtpErrorState){
@@ -208,11 +195,32 @@ Widget build(BuildContext context) {
           
             setState(() {
               submitAfter = submitCoolDownEndsInt;
-              if(submitTimer == null || !submitTimer!.isActive){
-                startSubmitTimer();
+
+              if(submitTimer == null ){
+                  startSubmitTimer();
+              }else if(!submitTimer!.isActive){
+                  startSubmitTimer();
               }
+              
+
             });
+
           }
+
+           showDialog(context: context, builder:(context) {
+                  return AlertDialog(
+                    actionsAlignment: MainAxisAlignment.center,
+                  content: Text(S.of(context).incorrectOTP, style: Theme.of(context).textTheme.bodyLarge,),
+                  actions: [
+                    CustomButton(
+                    text: S.of(context).Continue,
+                    onTap: () async{
+                      Navigator.of(context).pop();
+                    },
+                    ),
+                  ],
+                  );
+                },);
           
           
            }
@@ -220,29 +228,79 @@ Widget build(BuildContext context) {
           },
           child:  BlocBuilder<AuthenticationCubit, AuthenticationStates>(
             builder: (context, state) {
-             if(state is AuthenticationLoadingState || (submitTimer != null && submitTimer!.isActive) ){
+             if(state is OtpSubmitLoadingState){
+              // print("state is ${state}");
               return Padding(
                    padding:  EdgeInsets.only(bottom: 10.h),
                 child: SizedBox(
                   height: 65.h,
                   width: double.infinity,
-                  child: CustomButton(text: S.of(context).verifyAfter + " ${submitAfter}")),
+                  child: CustomButton(text: S.of(context).verifyOtp + "...")),
               );
           
              }
+
+             if (state is VerifyOtpErrorState){
+              print("state is ${VerifyOtpErrorState}");
+              
+                return Padding(
+                   padding:  EdgeInsets.only(bottom: 10.h),
+                child: SizedBox(
+                  height: 65.h,
+                  width: double.infinity,
+                  child: submitAfter > 0? CustomButton(text:S.of(context).verifyAfter + " ${submitAfter}"):
+                  CustomButton(text: S.of(context).verifyOtp,
+                  onTap: ()async{
+                  String otpString = "";
+                  for(TextEditingController controller in controllerList){
+                    if(controller.text == ""){
+                      Fluttertoast.showToast(msg: S.of(context).emptyOTP);
+                      return;
+                    }
+                     otpString = otpString + controller.text;
+
+                  }
+                  for(TextEditingController controller in controllerList){
+                     controller.text = "";
+                     
+                  }
+                  FocusScope.of(context).requestFocus(firstTextFieldFocusNode);
+                  print(otpString);
+                  // submitAfter = 10;
+                  // startSubmitTimer();
+                  // await authCubit.verifyOtp(otpString);
+                  await context.read<AuthenticationCubit>().verifyOtp(otpString, widget.email);
+                 }
+                  )
+                  ),
+              );
+             }
+             print("state is ${state}");
              return Padding(
                    padding:  EdgeInsets.only(bottom: 10.h),
                child: SizedBox(
                 height: 65.h,
           
                 width: double.infinity,
-                 child: CustomButton(text: S.of(context).verifyOtp, onTap: ()async{
+                 child: CustomButton(text: S.of(context).verifyOtp, onTap: state is OtpResendLoadingState? null : ()async{
                   String otpString = "";
                   for(TextEditingController controller in controllerList){
+                    if(controller.text == ""){
+                      Fluttertoast.showToast(msg: S.of(context).emptyOTP,
+                      backgroundColor: Colors.red
+                      );
+                      return;
+                    }
                      otpString = otpString + controller.text;
+
                   }
-                  startSubmitTimer();
-                  await authCubit.verifyOtp(otpString);
+                  for(TextEditingController controller in controllerList){
+                     controller.text = "";
+                     
+                  }
+                  FocusScope.of(context).requestFocus(firstTextFieldFocusNode);
+                  print(otpString);
+                  await context.read<AuthenticationCubit>().verifyOtp(otpString, widget.email);
                  },),
                ),
              );
@@ -252,14 +310,15 @@ Widget build(BuildContext context) {
           ),
           
           ),
-                 
-          Padding(
+
+          BlocBuilder<AuthenticationCubit, AuthenticationStates>(builder:(context, state) {
+            return Padding(
                    padding:  EdgeInsets.only(bottom: 10.h),
             child: SizedBox(
               height: 65.h,
               width: double.infinity,
               child: CustomButton(text: S.of(context).cancel, bgColor: Colors.red,
-              onTap:() {
+              onTap:state is OtpResendLoadingState || state is OtpSubmitLoadingState? null: () {
                 // call back function from login that resets all textfields
                 widget.afterCancellationCallBack();
                 Navigator.of(context).pop();
@@ -267,7 +326,10 @@ Widget build(BuildContext context) {
               
               ),
             ),
-          ),
+          );
+          },)
+                 
+          ,
           
        
       ],

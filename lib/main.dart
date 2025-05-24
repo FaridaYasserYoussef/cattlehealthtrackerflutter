@@ -9,6 +9,7 @@ import 'package:cattlehealthtracker/settings/view-model/settings_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -21,7 +22,7 @@ void main()  async{
   WidgetsFlutterBinding.ensureInitialized();
   final settingsCubit = SettingsCubit();
   await settingsCubit.getSettings();
-  GetIt.instance.registerSingleton<AuthenticationCubit>(AuthenticationCubit());
+  GetIt.instance.registerSingleton<AuthenticationCubit>(AuthenticationCubit(storage: FlutterSecureStorage()));
   runApp( MyApp(settingsCubit: settingsCubit,));
 }
 
@@ -48,7 +49,7 @@ class MyApp extends StatelessWidget {
                if (state is LogoutSuccessState) {
                 print("main logout Listener");
             navigatorKey.currentState!.pushAndRemoveUntil(
-              MaterialPageRoute(builder: (_) => const UserLoginScreen()),
+              MaterialPageRoute(builder: (_) =>  UserLoginScreen(storage: FlutterSecureStorage(), scaffoldKey: GlobalKey<ScaffoldState>(),)),
               (_) => false,
             );
             Fluttertoast.showToast(
@@ -77,7 +78,7 @@ class MyApp extends StatelessWidget {
                     title: 'Flutter Demo',
                     // theme: ThemeData.dark(),
                     theme: state.settingsModel.theme == "dark"? AppThemes.darkTheme: AppThemes.lightTheme,
-                    home: state.settingsModel.isloggedIn? HomeScreen(): UserLoginScreen(),
+                    home: state.settingsModel.isloggedIn? HomeScreen(storage: FlutterSecureStorage(), scaffoldKey: GlobalKey<ScaffoldState>(),): UserLoginScreen(storage: FlutterSecureStorage(), scaffoldKey: GlobalKey<ScaffoldState>(),),
                   );
                 }
               else{
@@ -92,7 +93,7 @@ class MyApp extends StatelessWidget {
                 supportedLocales: S.delegate.supportedLocales,
             debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',
-            home: UserLoginScreen(),
+            home: UserLoginScreen(storage: FlutterSecureStorage(), scaffoldKey: GlobalKey<ScaffoldState>(),),
                   );
               }
             },),

@@ -9,6 +9,7 @@ import 'dart:convert';
 
 import 'package:cattlehealthtracker/api/api.dart';
 import 'package:cattlehealthtracker/api/dio_service.dart';
+import 'package:cattlehealthtracker/authentication/model/data_models/user_model.dart';
 import 'package:cattlehealthtracker/authentication/repository/authentication_repository.dart';
 import 'package:cattlehealthtracker/authentication/view-model/authentication_cubit.dart';
 import 'package:cattlehealthtracker/authentication/view-model/authentication_states.dart';
@@ -16,10 +17,12 @@ import 'package:cattlehealthtracker/authentication/view/screens/users_login_scre
 import 'package:cattlehealthtracker/authentication/view/widgets/custom_button.dart';
 import 'package:cattlehealthtracker/authentication/view/widgets/custom_text_form_field.dart';
 import 'package:cattlehealthtracker/authentication/view/widgets/otp_form_widget.dart';
+import 'package:cattlehealthtracker/authentication/view/widgets/otp_text_field.dart';
 import 'package:cattlehealthtracker/common/app_colors.dart';
 import 'package:cattlehealthtracker/common/app_themes.dart';
 import 'package:cattlehealthtracker/common/cattle_screen.dart';
 import 'package:cattlehealthtracker/common/culling_screen.dart';
+import 'package:cattlehealthtracker/common/custom_exceptions.dart';
 import 'package:cattlehealthtracker/common/home_screen.dart';
 import 'package:cattlehealthtracker/common/roles_screen.dart';
 import 'package:cattlehealthtracker/common/users_screen.dart';
@@ -453,17 +456,166 @@ expect(find.byType(OtpFormWidget), findsOneWidget);
 });
 
 
-  testWidgets("verify OTP fails", (tester)async{
+  testWidgets("verify icorrect OTP", (tester)async{
     await tester.runAsync(()async{
       FlutterError.onError = _onErrorIgnoreOverflowErrors;
       tester.view.devicePixelRatio = 2.0;
       tester.view.physicalSize = const Size(720, 1600);
+      scaffoldKey = GlobalKey<ScaffoldState>();
+      final widget = await createLocalizedTestWidget(mockStorage, scaffoldKey);
+      when(mockRepo.login("example@gmail.com", "abcd1234")).thenAnswer((_) async =>{"detail":  "2fa-enabled", "user_authenticated": true, "email": "example@gmail.com", "resend_cooldown": (DateTime.now().millisecondsSinceEpoch / 1000) + 10});
+      when(mockRepo.verifyOtp("012345", "example@gmail.com")).thenAnswer((_) async => throw throw IncorrectOtpAfterVerification(errorMessage: "Incorrect OTP", submitCoolDownEnd: (DateTime.now().millisecondsSinceEpoch / 1000) + 10));
+      await tester.pumpWidget(widget);
+      await tester.pumpAndSettle();
+      await tester.enterText(find.widgetWithText(CustomTextFormField, "Email"), "example@gmail.com");
+      await tester.enterText(find.widgetWithText(CustomTextFormField, "Password"), "abcd1234");
+      await tester.tap(find.widgetWithText(CustomButton, "Login"));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.widgetWithText(OtpTextField, "0"), "0");
+      await tester.enterText(find.widgetWithText(OtpTextField, "1"), "1");
+      await tester.enterText(find.widgetWithText(OtpTextField, "2"), "2");
+      await tester.enterText(find.widgetWithText(OtpTextField, "3"), "3");
+      await tester.enterText(find.widgetWithText(OtpTextField, "4"), "4");
+      await tester.enterText(find.widgetWithText(OtpTextField, "5"), "5");
+      await tester.tap(find.widgetWithText(CustomButton, "Verify"));
+      await tester.pumpAndSettle();
+      expect(find.widgetWithText(AlertDialog, "You entered an incorrect OTP"), findsOneWidget);
     });
   });
 
-  testWidgets("verify OTP succeeds", (tester)async{});
+    testWidgets("verify OTP trials surpassed", (tester)async{
+      await tester.runAsync(()async{
+        FlutterError.onError = _onErrorIgnoreOverflowErrors;
+        tester.view.devicePixelRatio = 2.0;
+        tester.view.physicalSize = const Size(720, 1600);
+        scaffoldKey = GlobalKey<ScaffoldState>();
+        when(mockRepo.login("example@gmail.com", "abcd1234")). thenAnswer((_) async => {"detail":  "2fa-enabled", "user_authenticated": true, "email": "example@gmail.com", "resend_cooldown": (DateTime.now().millisecondsSinceEpoch / 1000) + 10});
+        when(mockRepo.verifyOtp("012345", "example@gmail.com")).thenAnswer((_) async => throw OtpAttemptsSurpassed(errorMessage: "too many OTP attempts"));
+        final widget = await createLocalizedTestWidget(mockStorage, scaffoldKey);
+        await tester.pumpWidget(widget);
+        await tester.pumpAndSettle();
+        await tester.enterText(find.widgetWithText(CustomTextFormField, "Email"), "example@gmail.com");
+        await tester.enterText(find.widgetWithText(CustomTextFormField, "Password"), "abcd1234");
+        await tester.tap(find.widgetWithText(CustomButton, "Login"));
+        await tester.pumpAndSettle();
+        await tester.enterText(find.widgetWithText(OtpTextField, "0"), "0");
+        await tester.enterText(find.widgetWithText(OtpTextField, "1"), "1");
+        await tester.enterText(find.widgetWithText(OtpTextField, "2"), "2");
+        await tester.enterText(find.widgetWithText(OtpTextField, "3"), "3");
+        await tester.enterText(find.widgetWithText(OtpTextField, "4"), "4");
+        await tester.enterText(find.widgetWithText(OtpTextField, "5"), "5");
+        await tester.tap(find.widgetWithText(CustomButton, "Verify"));
+        await tester.pumpAndSettle();
+        expect(find.widgetWithText(AlertDialog, "You exceeded your 4 OTP Attempts"), findsOneWidget);
+        expect(find.byType(OtpFormWidget), findsNothing);
+      });
+    });
 
-  testWidgets("resend UI change", (tester)async{});
+
+  testWidgets("verify OTP succeeds", (tester)async{
+    await tester.runAsync(()async{
+      FlutterError.onError = _onErrorIgnoreOverflowErrors;
+      tester.view.devicePixelRatio = 2.0;
+      tester.view.physicalSize = const Size(720, 1600);
+      scaffoldKey = GlobalKey<ScaffoldState>();
+      when(mockStorage.read(key: "features")).thenAnswer((_) async => '["Dashboard", "Users", "Cattle", "Culling", "Logs", "Medicines", "Settings", "Roles"]');
+      when(mockRepo.login("example@gmail.com", "abcd1234")).thenAnswer((_) async=>{"detail":  "2fa-enabled", "user_authenticated": true, "email": "example@gmail.com", "resend_cooldown": (DateTime.now().millisecondsSinceEpoch / 1000) + 10});
+      when(mockRepo.verifyOtp("012345", "example@gmail.com")).thenAnswer((_) async =>UserModel.fromJson({
+        "first_name": "Farah",
+        "last_name": "Yasser Youssef",
+        "mobile_number": "+201012226477",
+        "email": "valid@email.com",
+        "two_fa_enabled": false,
+        "role": "admin",
+        "features": [
+            "Dashboard",
+            "Users",
+            "Cattle",
+            "Culling",
+            "Logs",
+            "Medicines",
+            "Settings",
+            "Roles"
+        ]
+    }));
+
+    final widget = await createLocalizedTestWidget(mockStorage, scaffoldKey);
+    await tester.pumpWidget(widget);
+    await tester.pumpAndSettle();
+    await tester.enterText(find.widgetWithText(CustomTextFormField, "Email"), "example@gmail.com");
+    await tester.enterText(find.widgetWithText(CustomTextFormField, "Password"), "abcd1234");
+    await tester.tap(find.widgetWithText(CustomButton, "Login"));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.widgetWithText(OtpTextField, "0"), "0");
+    await tester.enterText(find.widgetWithText(OtpTextField, "1"), "1");
+    await tester.enterText(find.widgetWithText(OtpTextField, "2"), "2");
+    await tester.enterText(find.widgetWithText(OtpTextField, "3"), "3");
+    await tester.enterText(find.widgetWithText(OtpTextField, "4"), "4");
+    await tester.enterText(find.widgetWithText(OtpTextField, "5"), "5");
+    await tester.tap(find.widgetWithText(CustomButton, "Verify"));
+    await tester.pumpAndSettle();
+    expect(find.byType(OtpFormWidget), findsNothing);
+    expect(find.byType(HomeScreen), findsOneWidget);
+});
+  });
+
+  testWidgets("resend UI change", (tester)async{
+    await tester.runAsync(()async{
+      FlutterError.onError = _onErrorIgnoreOverflowErrors;
+      tester.view.devicePixelRatio = 2.0;
+      tester.view.physicalSize =  const Size(720, 1600);
+      scaffoldKey = GlobalKey<ScaffoldState>();
+      when(mockRepo.login("example@gmail.com", "abcd1234")).thenAnswer((_) async =>{"detail":  "2fa-enabled", "user_authenticated": true, "email": "example@gmail.com", "resend_cooldown": (DateTime.now().millisecondsSinceEpoch / 1000) + 10});
+      final widget = await createLocalizedTestWidget(mockStorage, scaffoldKey);
+      await tester.pumpWidget(widget);
+      await tester.pumpAndSettle();
+      await tester.enterText(find.widgetWithText(CustomTextFormField, "Email"), "example@gmail.com");
+      await tester.enterText(find.widgetWithText(CustomTextFormField, "Password"), "abcd1234");
+      await tester.tap(find.widgetWithText(CustomButton, "Login"));
+      await tester.pumpAndSettle();
+ expect(
+  find.descendant(
+    of: find.byType(CustomButton),
+    matching: find.text("Resend after 10"),
+  ),
+  findsOneWidget,
+);
+    });
+  });
+
+
+  testWidgets("verify UI change", (tester)async{
+await tester.runAsync(()async{
+      FlutterError.onError = _onErrorIgnoreOverflowErrors;
+      tester.view.devicePixelRatio = 2.0;
+      tester.view.physicalSize =  const Size(720, 1600);
+      scaffoldKey = GlobalKey<ScaffoldState>();
+      when(mockRepo.verifyOtp("012345", "example@gmail.com")).thenAnswer((_) async => throw throw IncorrectOtpAfterVerification(errorMessage: "Incorrect OTP", submitCoolDownEnd: (DateTime.now().millisecondsSinceEpoch / 1000) + 10));
+      when(mockRepo.login("example@gmail.com", "abcd1234")).thenAnswer((_) async =>{"detail":  "2fa-enabled", "user_authenticated": true, "email": "example@gmail.com", "resend_cooldown": (DateTime.now().millisecondsSinceEpoch / 1000) + 10});
+      final widget = await createLocalizedTestWidget(mockStorage, scaffoldKey);
+      await tester.pumpWidget(widget);
+      await tester.pumpAndSettle();
+      await tester.enterText(find.widgetWithText(CustomTextFormField, "Email"), "example@gmail.com");
+      await tester.enterText(find.widgetWithText(CustomTextFormField, "Password"), "abcd1234");
+      await tester.tap(find.widgetWithText(CustomButton, "Login"));
+      await tester.pumpAndSettle();
+    await tester.enterText(find.widgetWithText(OtpTextField, "0"), "0");
+    await tester.enterText(find.widgetWithText(OtpTextField, "1"), "1");
+    await tester.enterText(find.widgetWithText(OtpTextField, "2"), "2");
+    await tester.enterText(find.widgetWithText(OtpTextField, "3"), "3");
+    await tester.enterText(find.widgetWithText(OtpTextField, "4"), "4");
+    await tester.enterText(find.widgetWithText(OtpTextField, "5"), "5");
+    await tester.tap(find.widgetWithText(CustomButton, "Verify"));
+    await tester.pumpAndSettle();
+expect(
+  find.byWidgetPredicate(
+    (widget) => widget is Text && widget.data != null && widget.data!.startsWith("Verify after"),
+  ),
+  findsOneWidget,
+);
+    });
+
+  });
 
 });
 

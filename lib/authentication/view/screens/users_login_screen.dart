@@ -126,7 +126,13 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                     if(state is LoginSuccessState || state is VerifyOtpSuccessState){
                       Fluttertoast.showToast(msg: S.of(context).loginSuccess, backgroundColor: AppColors.greenColor, );
                       print("login is successful");
+                      if (state is LoginSuccessState){
                       Navigator.of(context).pushReplacement(MaterialPageRoute(builder:(context) => HomeScreen(storage: widget.storage, scaffoldKey: widget.scaffoldKey,),));
+
+                      }
+                      else if(state is VerifyOtpSuccessState){
+                          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => HomeScreen(storage: widget.storage, scaffoldKey: widget.scaffoldKey,)), (route)=>false);
+                      }
                     }
                     else if(state is AuthenticationErrorState){
                       Fluttertoast.showToast(msg: state.errorMessage, backgroundColor: Colors.red, );

@@ -25,7 +25,7 @@ class AuthenticationCubit extends Cubit<AuthenticationStates>{
         emit(LoginSuccessState(user: user));
         print("success state emitted");
 
-      }else{
+      }else if(result["detail"] == "2fa-enabled"){
         print("2fa state emitted");
         emit(Authentication2faState(resendCoolDownSecondsLeft: result['resend_cooldown']));
       }

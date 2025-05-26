@@ -13,7 +13,10 @@ class CustomButton extends StatelessWidget {
     return Padding(
       padding:  EdgeInsets.symmetric(horizontal: 8.w),
       child: ElevatedButton(
-        style: Theme.of(context).elevatedButtonTheme.style!.copyWith(backgroundColor: bgColor != null? WidgetStatePropertyAll(bgColor): null,   padding: WidgetStatePropertyAll(EdgeInsets.only(top: 2.h))),
+        
+        style: Theme.of(context).elevatedButtonTheme.style!.copyWith(
+          backgroundColor: onTap == null? WidgetStatePropertyAll(Colors.grey.shade500): bgColor != null? WidgetStatePropertyAll(bgColor): null,   
+          padding: WidgetStatePropertyAll(EdgeInsets.only(top: 2.h))),
         onPressed:onTap, 
       child: Padding(
         padding:  EdgeInsets.symmetric(horizontal: 8.w),

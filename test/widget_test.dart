@@ -184,7 +184,7 @@ when(mockRepo.login("valid@email.com", "correctPassword"))
         "first_name": "Farah",
         "last_name": "Yasser Youssef",
         "mobile_number": "+201012226477",
-        "email": "faridarunshercode@gmail.com",
+        "email": "valid@email.com",
         "two_fa_enabled": false,
         "role": "admin",
         "features": [
@@ -258,7 +258,7 @@ scaffoldKey = GlobalKey<ScaffoldState>();
 final widget = await createLocalizedTestWidget(mockStorage, scaffoldKey);
 await tester.pumpWidget(widget);
 await tester.pumpAndSettle();
-await tester.enterText(find.widgetWithText(CustomTextFormField, "Email"), "farida.yasser");
+await tester.enterText(find.widgetWithText(CustomTextFormField, "Email"), "example");
 await tester.tap(find.widgetWithText(CustomButton, "Login"));
 await tester.pump();
 expect(find.text("Email must contain @"), findsOneWidget);
@@ -269,7 +269,7 @@ testWidgets("test email verification without .com", (tester) async{
 final widget = await createLocalizedTestWidget(mockStorage, scaffoldKey);
 await tester.pumpWidget(widget);
 await tester.pumpAndSettle();
-await tester.enterText(find.widgetWithText(CustomTextFormField, "Email"), "farida.yasser510@gmail");
+await tester.enterText(find.widgetWithText(CustomTextFormField, "Email"), "example@gmail");
 await tester.tap(find.widgetWithText(CustomButton, "Login"));
 await tester.pump();
 expect(find.text("Email must end with .com"), findsOneWidget);
@@ -431,32 +431,34 @@ group("OTP tests", (){
     });
     });
   
+
+
+
   testWidgets("OTP pop-up appears", (tester)async{
     await tester.runAsync(()async{
-    FlutterError.onError = _onErrorIgnoreOverflowErrors;
-    tester.view.devicePixelRatio = 2.0;
-    tester.view.physicalSize = const Size(720, 1600);
-    when(mockRepo.login("farida.yasser510@gmail.com", "Dida2003")).thenAnswer((_) async => {"detail":  "2fa-enabled","user_authenticated": true, "email": "farida.yasser510@gmail.com", "resend_cooldown": (DateTime.now().millisecondsSinceEpoch / 1000) + 10});
-    scaffoldKey = GlobalKey<ScaffoldState>();
-    final widget = await createLocalizedTestWidget(mockStorage, scaffoldKey);
-    await tester.pumpWidget(widget);
-    await tester.pumpAndSettle();
-    await tester.enterText(find.widgetWithText(CustomTextFormField, "Email"), "farida.yasser510@gmail.com");
-    await tester.pumpAndSettle();
-    await tester.enterText(find.widgetWithText(CustomTextFormField, "Password"), "Dida2003");
-    await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(CustomButton, "Login"));
-    await tester.pump();
-    expect(find.byType(OtpFormWidget), findsOneWidget);
+when(mockRepo.login("example@gmail.com", "abcd1234"))
+    .thenAnswer((_) async => {"detail":  "2fa-enabled", "user_authenticated": true, "email": "example@gmail.com", "resend_cooldown": (DateTime.now().millisecondsSinceEpoch / 1000) + 10});
+when(mockStorage.read(key: "features")).thenAnswer((_) async => '["Dashboard", "Users", "Cattle", "Culling", "Logs", "Medicines", "Settings", "Roles"]');
+scaffoldKey = GlobalKey<ScaffoldState>();
+final widget = await createLocalizedTestWidget(mockStorage, scaffoldKey);
+ await tester.pumpWidget(widget);
+ await tester.pumpAndSettle();
+ await tester.enterText(find.widgetWithText(CustomTextFormField, "Email"), "example@gmail.com");
+ await tester.enterText(find.widgetWithText(CustomTextFormField, "Password"), "abcd1234");
+ await tester.tap(find.widgetWithText(CustomButton, "Login"));
+ await tester.pumpAndSettle(); 
+expect(find.byType(OtpFormWidget), findsOneWidget);
     });
 
-
-    
-  });
+});
 
 
   testWidgets("verify OTP fails", (tester)async{
-    
+    await tester.runAsync(()async{
+      FlutterError.onError = _onErrorIgnoreOverflowErrors;
+      tester.view.devicePixelRatio = 2.0;
+      tester.view.physicalSize = const Size(720, 1600);
+    });
   });
 
   testWidgets("verify OTP succeeds", (tester)async{});

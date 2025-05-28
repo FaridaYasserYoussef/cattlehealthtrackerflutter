@@ -22,12 +22,20 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "Change": MessageLookupByLibrary.simpleMessage("Change"),
     "Continue": MessageLookupByLibrary.simpleMessage("Continue"),
     "OTPAttemptsExceeded": MessageLookupByLibrary.simpleMessage(
       "You exceeded your 4 OTP Attempts",
     ),
+    "OTPFormMessage": MessageLookupByLibrary.simpleMessage(
+      "An OTP has been sent to your email.",
+    ),
+    "OtpExpiration": MessageLookupByLibrary.simpleMessage(
+      "Your OTP has expired. Please request a new one and enter the new OTP",
+    ),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "cattle": MessageLookupByLibrary.simpleMessage("Cattle"),
+    "changePassword": MessageLookupByLibrary.simpleMessage("Change Password"),
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
     "confirmLogout": MessageLookupByLibrary.simpleMessage("Confirm logout"),
     "culling": MessageLookupByLibrary.simpleMessage("Culling"),
@@ -48,13 +56,22 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
     "locale": MessageLookupByLibrary.simpleMessage("Language"),
+    "loggingOut": MessageLookupByLibrary.simpleMessage("Logging out..."),
     "login": MessageLookupByLibrary.simpleMessage("Login"),
     "loginSuccess": MessageLookupByLibrary.simpleMessage("Login Successful"),
     "logout": MessageLookupByLibrary.simpleMessage("Logout"),
     "logoutSuccess": MessageLookupByLibrary.simpleMessage("Logout Successful"),
     "logs": MessageLookupByLibrary.simpleMessage("Logs"),
     "medicines": MessageLookupByLibrary.simpleMessage("Medicines"),
+    "newPassword": MessageLookupByLibrary.simpleMessage("New"),
+    "oldPasswordIncorrect": MessageLookupByLibrary.simpleMessage(
+      "Old password is wrong",
+    ),
+    "oldPaswword": MessageLookupByLibrary.simpleMessage("Old"),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
+    "passwordMatch": MessageLookupByLibrary.simpleMessage(
+      "Passwords can\'t match",
+    ),
     "passwordMinLen": MessageLookupByLibrary.simpleMessage(
       "Password is at least 8 characters",
     ),

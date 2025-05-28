@@ -456,7 +456,7 @@ expect(find.byType(OtpFormWidget), findsOneWidget);
 });
 
 
-  testWidgets("verify icorrect OTP", (tester)async{
+  testWidgets("verify incorrect OTP", (tester)async{
     await tester.runAsync(()async{
       FlutterError.onError = _onErrorIgnoreOverflowErrors;
       tester.view.devicePixelRatio = 2.0;

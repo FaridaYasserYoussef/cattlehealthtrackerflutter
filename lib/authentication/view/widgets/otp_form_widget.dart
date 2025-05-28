@@ -81,6 +81,12 @@ void startSubmitTimer(){
 Widget build(BuildContext context) {
     return Column(
       children: [
+        Padding(
+          padding:  EdgeInsets.only(top: 10.h),
+          child: Text(S.of(context).OTPFormMessage, style: TextStyle(fontFamily: "Tajawal", fontSize: 18.sp, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+          ),
+        ),
         Expanded(
           child: Directionality(
             textDirection:TextDirection.ltr,
@@ -164,6 +170,22 @@ Widget build(BuildContext context) {
             
           
           BlocListener<AuthenticationCubit, AuthenticationStates>(listener:(context, state) {
+            if(state is OtpExpiredState){
+              showDialog(context: context, builder:(context) {
+                  return AlertDialog(
+                    actionsAlignment: MainAxisAlignment.center,
+                  content: Text(S.of(context).OtpExpiration, style: Theme.of(context).textTheme.bodyLarge,),
+                  actions: [
+                    CustomButton(
+                    text: S.of(context).Continue,
+                    onTap: () async{
+                      Navigator.of(context).pop();
+                    },
+                    ),
+                  ],
+                  );
+                },);
+            }
             // if state is SurPassed attempts pop
            if(state is SurpassedAttemptsOtpErrorState){
             // call back function from login that resets all textfields

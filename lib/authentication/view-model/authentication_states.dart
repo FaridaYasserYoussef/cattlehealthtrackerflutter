@@ -68,3 +68,10 @@ class LogoutSuccessState extends AuthenticationStates{}
 class LogoutLoadingState extends AuthenticationStates{}
 class OtpResendLoadingState extends AuthenticationStates{}
 class OtpSubmitLoadingState extends AuthenticationStates{}
+
+class OtpExpiredState extends AuthenticationStates{}
+
+class ChangePasswordLoading extends AuthenticationStates{}
+
+class OldPasswordIsIncorrect extends AuthenticationStates{}
+

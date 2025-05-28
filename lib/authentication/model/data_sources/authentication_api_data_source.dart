@@ -78,6 +78,9 @@ class AuthenticationApiDataSource extends AuthenticationDataSource{
       if(response.statusCode == 200){
         return true;
       }
+      else if(response.statusCode == 401){
+        throw OldPasswordIncorrect(errorMessage: "incorrect old password");
+      }
       else{
         throw Exception(response.data["error"]);
       }
@@ -128,8 +131,11 @@ class AuthenticationApiDataSource extends AuthenticationDataSource{
 
       }
      
-     if(response.data["detail"] == "incorrect otp, surpassed otp trials"){
+     else if(response.data["detail"] == "incorrect otp, surpassed otp trials"){
        throw OtpAttemptsSurpassed(errorMessage: "too many OTP attempts");
+     }
+     else if(response.data["detail"] == "OTP not set ask for an otp resend"){
+        throw OtpNotSet(errorMessage: "OTP is expired ask for a resend");
      }
      else{
       throw(Exception());

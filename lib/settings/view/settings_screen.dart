@@ -1,5 +1,7 @@
 import 'package:cattlehealthtracker/authentication/view-model/authentication_cubit.dart';
 import 'package:cattlehealthtracker/authentication/view-model/authentication_states.dart';
+import 'package:cattlehealthtracker/authentication/view/widgets/change_password_form_widget.dart';
+import 'package:cattlehealthtracker/authentication/view/widgets/custom_button.dart';
 import 'package:cattlehealthtracker/common/app_colors.dart';
 import 'package:cattlehealthtracker/generated/l10n.dart';
 import 'package:cattlehealthtracker/settings/view-model/settings_cubit.dart';
@@ -12,7 +14,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
-
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
@@ -137,6 +138,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                    )
                  ],
                 ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                      Text(S.of(context).changePassword, style: Theme.of(context).textTheme.bodyMedium),
+                      CustomButton(text:  S.of(context).Change, onTap: () {
+                        showDialog(
+                          barrierDismissible: false,
+                          context: context, builder:(context) {
+                          return AlertDialog(
+                            content: ChangePasswordFormWidget(),
+                           
+                          );
+                        },);
+                      },)
+
+                ],)
                     
               ],),
           ),);

@@ -75,9 +75,64 @@ class S {
     return Intl.message('Continue', name: 'Continue', desc: '', args: []);
   }
 
+  /// `Change`
+  String get Change {
+    return Intl.message('Change', name: 'Change', desc: '', args: []);
+  }
+
+  /// `New`
+  String get newPassword {
+    return Intl.message('New', name: 'newPassword', desc: '', args: []);
+  }
+
+  /// `Old`
+  String get oldPaswword {
+    return Intl.message('Old', name: 'oldPaswword', desc: '', args: []);
+  }
+
+  /// `Logging out...`
+  String get loggingOut {
+    return Intl.message(
+      'Logging out...',
+      name: 'loggingOut',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Old password is wrong`
+  String get oldPasswordIncorrect {
+    return Intl.message(
+      'Old password is wrong',
+      name: 'oldPasswordIncorrect',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Passwords can't match`
+  String get passwordMatch {
+    return Intl.message(
+      'Passwords can\'t match',
+      name: 'passwordMatch',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Loading...`
   String get loading {
     return Intl.message('Loading...', name: 'loading', desc: '', args: []);
+  }
+
+  /// `Change Password`
+  String get changePassword {
+    return Intl.message(
+      'Change Password',
+      name: 'changePassword',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Email can't be empty`
@@ -95,6 +150,26 @@ class S {
     return Intl.message(
       'OTP must be 6 digits',
       name: 'emptyOTP',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `An OTP has been sent to your email.`
+  String get OTPFormMessage {
+    return Intl.message(
+      'An OTP has been sent to your email.',
+      name: 'OTPFormMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your OTP has expired. Please request a new one and enter the new OTP`
+  String get OtpExpiration {
+    return Intl.message(
+      'Your OTP has expired. Please request a new one and enter the new OTP',
+      name: 'OtpExpiration',
       desc: '',
       args: [],
     );

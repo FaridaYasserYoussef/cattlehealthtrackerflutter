@@ -13,3 +13,16 @@ class OtpAttemptsSurpassed implements Exception{
   OtpAttemptsSurpassed({required this.errorMessage});
 
 }
+
+class OtpNotSet implements Exception{
+  final String errorMessage;
+
+  OtpNotSet({required this.errorMessage});
+
+}
+
+class OldPasswordIncorrect{
+    final String errorMessage;
+
+  OldPasswordIncorrect({required this.errorMessage});
+}

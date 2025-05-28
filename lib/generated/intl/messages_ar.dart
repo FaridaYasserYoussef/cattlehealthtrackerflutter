@@ -22,12 +22,20 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "Change": MessageLookupByLibrary.simpleMessage("تغيير"),
     "Continue": MessageLookupByLibrary.simpleMessage("متابعة"),
     "OTPAttemptsExceeded": MessageLookupByLibrary.simpleMessage(
       "لقد تجاوزت الحد الأقصى لمحاولات رمز التحقق",
     ),
+    "OTPFormMessage": MessageLookupByLibrary.simpleMessage(
+      "تم إرسال رمز التحقق إلى بريدك الإلكتروني.",
+    ),
+    "OtpExpiration": MessageLookupByLibrary.simpleMessage(
+      "انتهت صلاحية رمز التحقق الخاص بك. من فضلك اطلب رمز تحقق جديد وأدخله.",
+    ),
     "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
     "cattle": MessageLookupByLibrary.simpleMessage("الماشية"),
+    "changePassword": MessageLookupByLibrary.simpleMessage("تغيير كلمة المرور"),
     "confirm": MessageLookupByLibrary.simpleMessage("تأكيد"),
     "confirmLogout": MessageLookupByLibrary.simpleMessage("تأكيد الخروج"),
     "culling": MessageLookupByLibrary.simpleMessage("الإعدام"),
@@ -54,6 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "loading": MessageLookupByLibrary.simpleMessage("جارٍ التحميل..."),
     "locale": MessageLookupByLibrary.simpleMessage("اللغة"),
+    "loggingOut": MessageLookupByLibrary.simpleMessage("جاري تسجيل الخروج"),
     "login": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
     "loginSuccess": MessageLookupByLibrary.simpleMessage(
       "تم تسجيل الدخول بنجاح",
@@ -64,7 +73,15 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "logs": MessageLookupByLibrary.simpleMessage("السجلات"),
     "medicines": MessageLookupByLibrary.simpleMessage("الأدوية"),
+    "newPassword": MessageLookupByLibrary.simpleMessage("الجديدة"),
+    "oldPasswordIncorrect": MessageLookupByLibrary.simpleMessage(
+      "كلمة المرور القديمة خاطئة",
+    ),
+    "oldPaswword": MessageLookupByLibrary.simpleMessage("القديمة"),
     "password": MessageLookupByLibrary.simpleMessage("كلمة السر"),
+    "passwordMatch": MessageLookupByLibrary.simpleMessage(
+      "لا يمكن تطابق كلمتين المرور",
+    ),
     "passwordMinLen": MessageLookupByLibrary.simpleMessage(
       "يجب أن تكون كلمة المرور مكونة من 8 أحرف على الأقل",
     ),

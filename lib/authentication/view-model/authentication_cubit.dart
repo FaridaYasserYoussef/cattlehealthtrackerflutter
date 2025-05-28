@@ -41,10 +41,13 @@ class AuthenticationCubit extends Cubit<AuthenticationStates>{
 
     Future<void> changePassword(String oldPassword, String newPassword)async{
       try{
-         emit(AuthenticationLoadingState());
+         emit(ChangePasswordLoading());
          await repository.changePassword(oldPassword, newPassword);
          emit(ChangePasswordSuccessState());
       }catch(e){
+        if(e is OldPasswordIncorrect){
+          emit(OldPasswordIsIncorrect());
+        }
         emit(AuthenticationErrorState(errorMessage:e.toString()));
       }
     }
@@ -61,6 +64,9 @@ class AuthenticationCubit extends Cubit<AuthenticationStates>{
         else if (e is OtpAttemptsSurpassed){
           print("you surpassed surpassed your 3 OTP attempsts");
           emit(SurpassedAttemptsOtpErrorState(errorMessage: e.errorMessage));
+        }
+        else if(e is OtpNotSet){
+         emit(OtpExpiredState());
         }
         else{
         emit(AuthenticationErrorState(errorMessage: e.toString()));

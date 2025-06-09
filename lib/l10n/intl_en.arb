@@ -41,6 +41,12 @@
     "verifyOtp": "Verify",
     "verifyAfter": "Verify after",
     "resendAfter": "Resend after",
-    "resend": "Resend"
+    "resend": "Resend", 
+    "forgetPassword": "Forgot your password?",
+    "sendResetPaswordLink": "Send Reset Password Link",
+    "send": "Send",
+    "emailSent": "Email sent",
+    "emailNotFound": "Email not found",
+    "failedToSendEmail": "Failed to send email"
   }
   

@@ -41,6 +41,12 @@
     "verifyOtp": "التحقق",
     "verifyAfter": "التحقق بعد",
     "resendAfter": "إعادة الإرسال بعد",
-    "resend": "إعادة الإرسال"
+    "resend": "إعادة الإرسال",
+    "forgetPassword": "هل نسيت كلمة المرور؟",
+    "sendResetPaswordLink": "إرسال رابط تغيير كلمة المرور",
+    "send": "إرسال",
+    "emailSent": "تم إرسال الإيميل",
+    "emailNotFound": "الإيميل غير موجود",
+    "failedToSendEmail": "فشل في إرسال الإيميل"
   }
   

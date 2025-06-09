@@ -8,6 +8,6 @@ abstract class AuthenticationDataSource{
   Future<bool?> toggle2fa();
   Future<double?> resendOtp(String email);
   Future<bool?> logout();
-  Future<bool?> logoutLocally( );
-  
+  Future<bool?> logoutLocally();
+  Future<bool?> sendResetPasswordLink(String email);
 }

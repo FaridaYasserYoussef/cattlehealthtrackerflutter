@@ -364,6 +364,56 @@ class S {
   String get resend {
     return Intl.message('Resend', name: 'resend', desc: '', args: []);
   }
+
+  /// `Forgot your password?`
+  String get forgetPassword {
+    return Intl.message(
+      'Forgot your password?',
+      name: 'forgetPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send Reset Password Link`
+  String get sendResetPaswordLink {
+    return Intl.message(
+      'Send Reset Password Link',
+      name: 'sendResetPaswordLink',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send`
+  String get send {
+    return Intl.message('Send', name: 'send', desc: '', args: []);
+  }
+
+  /// `Email sent`
+  String get emailSent {
+    return Intl.message('Email sent', name: 'emailSent', desc: '', args: []);
+  }
+
+  /// `Email not found`
+  String get emailNotFound {
+    return Intl.message(
+      'Email not found',
+      name: 'emailNotFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to send email`
+  String get failedToSendEmail {
+    return Intl.message(
+      'Failed to send email',
+      name: 'failedToSendEmail',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

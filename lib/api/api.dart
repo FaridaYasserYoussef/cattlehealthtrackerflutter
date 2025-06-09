@@ -10,5 +10,5 @@ class API{
   static const hostConnectAuthenticationChangePassword= "$hostConnectAuthentication/change_password";
   static const hostConnectAuthenticationToggle2fa = "$hostConnectAuthentication/toggle_2fa";
   static const hostConnectAuthenticationLogout = "$hostConnectAuthentication/logout";
-
+  static const hostConnectAuthenticationSendResetLink = "$hostConnectAuthentication/send-password-reset-email";
 }

@@ -44,11 +44,19 @@ class AuthenticationCubit extends Cubit<AuthenticationStates>{
          emit(ChangePasswordLoading());
          await repository.changePassword(oldPassword, newPassword);
          emit(ChangePasswordSuccessState());
-      }catch(e){
+      }
+      
+      catch(e){
+        print("in catch e");
+        print(e.runtimeType);
+        print(e.toString());
         if(e is OldPasswordIncorrect){
+          print("old paswword is incorrect");
           emit(OldPasswordIsIncorrect());
+        }else{
+      emit(AuthenticationErrorState(errorMessage:e.toString()));
         }
-        emit(AuthenticationErrorState(errorMessage:e.toString()));
+        
       }
     }
     Future<void> verifyOtp(String otp, String email) async{
@@ -118,6 +126,28 @@ class AuthenticationCubit extends Cubit<AuthenticationStates>{
         emit(AuthenticationErrorState(errorMessage: e.toString()));
        }
 
+     }
+
+     Future<void> sendResetPasswordLink(String email) async{
+      try{
+      emit(SendPasswordResetLinkLoadingState());
+      bool? succesful = await repository.sendResetPasswordLink(email);
+      if(succesful == true){
+        emit(SendPasswordResetLinkSuccessState());
+      }else{
+        emit(AuthenticationErrorState(errorMessage: "unexpected fail while sending reset email"));
+      }
+      }catch(e){
+        if(e is FailedToSendPasswordResetEmail){
+          emit(SendPasswordResetLinkFailedToSendEmailState());
+        }else if(e is PasswordResetEmailAddressNotFound){
+          emit(SendPasswordResetLinkUserNotFoundErrorState());
+        }else{
+          emit(AuthenticationErrorState(errorMessage: e.toString()));
+
+        }
+
+      }
      }
   
 }

@@ -48,6 +48,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "emailDotCom": MessageLookupByLibrary.simpleMessage(
       ".com يجب أن ينتهي البريد الإلكتروني بـ",
     ),
+    "emailNotFound": MessageLookupByLibrary.simpleMessage("الإيميل غير موجود"),
+    "emailSent": MessageLookupByLibrary.simpleMessage("تم إرسال الإيميل"),
     "emptyEmail": MessageLookupByLibrary.simpleMessage(
       "لا يمكن أن يكون البريد الإلكتروني فارغًا",
     ),
@@ -56,6 +58,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "emptyPassword": MessageLookupByLibrary.simpleMessage(
       "لا يمكن أن تكون كلمة المرور فارغة",
+    ),
+    "failedToSendEmail": MessageLookupByLibrary.simpleMessage(
+      "فشل في إرسال الإيميل",
+    ),
+    "forgetPassword": MessageLookupByLibrary.simpleMessage(
+      "هل نسيت كلمة المرور؟",
     ),
     "incorrectOTP": MessageLookupByLibrary.simpleMessage(
       "لقد أدخلت رمز التحقق بشكل غير صحيح.",
@@ -88,6 +96,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "resend": MessageLookupByLibrary.simpleMessage("إعادة الإرسال"),
     "resendAfter": MessageLookupByLibrary.simpleMessage("إعادة الإرسال بعد"),
     "roles": MessageLookupByLibrary.simpleMessage("الأدوار"),
+    "send": MessageLookupByLibrary.simpleMessage("إرسال"),
+    "sendResetPaswordLink": MessageLookupByLibrary.simpleMessage(
+      "إرسال رابط تغيير كلمة المرور",
+    ),
     "settings": MessageLookupByLibrary.simpleMessage("الإعدادات"),
     "twofa": MessageLookupByLibrary.simpleMessage("التحقق من الهوية بخطوتين"),
     "users": MessageLookupByLibrary.simpleMessage("المستخدمون"),

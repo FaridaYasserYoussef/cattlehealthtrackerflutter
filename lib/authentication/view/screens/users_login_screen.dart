@@ -3,6 +3,7 @@ import 'package:cattlehealthtracker/authentication/view-model/authentication_sta
 import 'package:cattlehealthtracker/authentication/view/widgets/custom_button.dart';
 import 'package:cattlehealthtracker/authentication/view/widgets/custom_text_form_field.dart';
 import 'package:cattlehealthtracker/authentication/view/widgets/otp_form_widget.dart';
+import 'package:cattlehealthtracker/authentication/view/widgets/send_reset_password_link_form.dart';
 import 'package:cattlehealthtracker/common/app_colors.dart';
 import 'package:cattlehealthtracker/common/app_images.dart';
 import 'package:cattlehealthtracker/common/home_screen.dart';
@@ -160,7 +161,23 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                       }
                     },);
                   },),
-                  )
+                  ),
+
+                  TextButton(onPressed: (){
+                    showDialog(
+                      barrierDismissible: false,
+                      context: context, builder:(context) {
+                      return AlertDialog(
+                        content: SendResetPasswordLinkForm(),
+
+                      );
+                    },);
+                  },
+                   child: Text(S.of(context).forgetPassword, 
+                   style: TextStyle(fontFamily: "Tajawal", 
+                   fontSize: 18.sp, 
+                   fontWeight: FontWeight.bold, 
+                   color: AppColors.greenColor,)))
                 ],
                ),
              ),

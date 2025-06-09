@@ -21,8 +21,22 @@ class OtpNotSet implements Exception{
 
 }
 
-class OldPasswordIncorrect{
+class OldPasswordIncorrect implements Exception{
     final String errorMessage;
 
   OldPasswordIncorrect({required this.errorMessage});
+}
+
+class FailedToSendPasswordResetEmail implements Exception{
+  final String errorMessage;
+
+  FailedToSendPasswordResetEmail({required this.errorMessage});
+
+}
+
+class PasswordResetEmailAddressNotFound implements Exception{
+  final String errorMessage;
+
+  PasswordResetEmailAddressNotFound({required this.errorMessage});
+
 }

@@ -64,31 +64,32 @@ class _ChangePasswordFormWidgetState extends State<ChangePasswordFormWidget> {
                     }
               },
               ),
-              BlocBuilder<AuthenticationCubit, AuthenticationStates>(builder:(context, state) {
-                if( state is LogoutLoadingState){
+  
+              BlocListener<AuthenticationCubit, AuthenticationStates>(listener:(context, state) async{
+              if( state is LogoutLoadingState){
                     showDialog(context: context, 
                     barrierDismissible: false,
                   builder:(context) {
-                    return AlertDialog(content: Column(
-                      children: [
-                        Center(child: Text(S.of(context).loggingOut, style: TextStyle(fontFamily: "Tajawal", fontSize: 18.sp, fontWeight: FontWeight.bold),)),
-                        Center(child: CircularProgressIndicator(color: AppColors.greenColor,),)
-                      ],),);
+                    return AlertDialog(content: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Center(child: Text(S.of(context).loggingOut, style: TextStyle(fontFamily: "Tajawal", fontSize: 18.sp, fontWeight: FontWeight.bold),)),
+                          Center(child: CircularProgressIndicator(color: AppColors.greenColor,),)
+                        ],),
+                    ),);
                   },);
                 }
-                return SizedBox.shrink();
-                
-              },),
-              BlocListener<AuthenticationCubit, AuthenticationStates>(listener:(context, state) async{
+
                 if(state is ChangePasswordSuccessState){
-                  
+                  print("change password successful");
                   await context.read<AuthenticationCubit>().logout();
                 }
                 
-                if(state is OldPasswordIncorrect){
+                if(state is OldPasswordIsIncorrect){
                 showDialog(context: context, builder:(context) {
                   return AlertDialog(
                    content: Text(S.of(context).oldPasswordIncorrect, style: Theme.of(context).textTheme.bodyLarge,),
+                   actionsAlignment: MainAxisAlignment.center,
                actions: [
                     CustomButton(
                     text: S.of(context).Continue,
@@ -102,33 +103,36 @@ class _ChangePasswordFormWidgetState extends State<ChangePasswordFormWidget> {
                 }
               },
               
-              child:  Padding(
+              child:  BlocBuilder<AuthenticationCubit, AuthenticationStates>(builder:(context, state) {
+                return Padding(
                 padding: EdgeInsets.symmetric(vertical: 10.h),
                 child: SizedBox(
                   height: 65.h,
                   width: double.infinity,
-                  child: CustomButton(text: S.of(context).Change, onTap: () async{
+                  child: CustomButton(text: state is ChangePasswordLoading? S.of(context).Change + "...": S.of(context).Change, onTap: state is ChangePasswordLoading  || state is LogoutLoadingState? null : () async{
                     if(formKey.currentState!.validate()){
 
                       await context.read<AuthenticationCubit>().changePassword(oldPasswordController.text, newPasswordController.text);
                     }
                   },),
                 ),
-              ),
+              );
+              },)
           
               ),
              
-              Padding(
+              BlocBuilder<AuthenticationCubit, AuthenticationStates>(builder:(context, state) {
+                return Padding(
               padding: EdgeInsets.symmetric(vertical: 10.h),
-          
                 child: SizedBox(
                   height: 65.h,
                   width: double.infinity,
-                  child: CustomButton(text: S.of(context).cancel, bgColor: Colors.red, onTap: () {
+                  child: CustomButton(text: S.of(context).cancel, bgColor: Colors.red, onTap: state is ChangePasswordLoading || state is LogoutLoadingState? null : () {
                     Navigator.of(context).pop();
                   },),
                 ),
-              )
+              );
+              },)
             ],
           ),
         ),

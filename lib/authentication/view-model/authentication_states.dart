@@ -75,3 +75,10 @@ class ChangePasswordLoading extends AuthenticationStates{}
 
 class OldPasswordIsIncorrect extends AuthenticationStates{}
 
+class SendPasswordResetLinkLoadingState extends AuthenticationStates{}
+
+class SendPasswordResetLinkSuccessState extends AuthenticationStates{}
+
+class SendPasswordResetLinkUserNotFoundErrorState extends AuthenticationStates{}
+class SendPasswordResetLinkFailedToSendEmailState extends AuthenticationStates{}
+

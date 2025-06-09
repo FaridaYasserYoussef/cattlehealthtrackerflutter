@@ -65,7 +65,7 @@ class AuthenticationApiDataSource extends AuthenticationDataSource{
   
   @override
   Future<bool?> changePassword(String oldPassword, String newPassword) async{
-    try{
+    // try{
       dioService.configureDio(baseUrl: API.hostConnect);
       final storage = FlutterSecureStorage();
       String? accessToken  = await storage.read(key: "access");
@@ -78,15 +78,17 @@ class AuthenticationApiDataSource extends AuthenticationDataSource{
       if(response.statusCode == 200){
         return true;
       }
-      else if(response.statusCode == 401){
+      else if(response.statusCode == 400){
+        print("old password issue");
         throw OldPasswordIncorrect(errorMessage: "incorrect old password");
+        
       }
       else{
         throw Exception(response.data["error"]);
       }
-    }catch(e){
-      throw Exception(e.toString());
-    }
+    // }catch(e){
+    //   throw Exception(e.toString());
+    // }
   }
   
   @override
@@ -246,5 +248,30 @@ class AuthenticationApiDataSource extends AuthenticationDataSource{
       throw Exception(e.toString());
     }
   }
+  
+  @override
+  Future<bool?> sendResetPasswordLink(String email) async{
+   dioService.configureDio(baseUrl: API.hostConnect);
+   Response response = await dioService.postRequest(API.hostConnectAuthenticationSendResetLink, 
+      {
+         "email": email
+      }, null, null);
+
+      if(response.statusCode == 200){
+        return true;
+      }
+     
+     if(response.statusCode == 400){
+      if(response.data["error"] == "failed to send email"){
+        throw FailedToSendPasswordResetEmail(errorMessage: "failed to send email");
+
+      }else if(response.data["error"] == "user not found"){
+        throw PasswordResetEmailAddressNotFound(errorMessage: "user not found");
+      }
+     }
+
+  }
+
+  
 
 }

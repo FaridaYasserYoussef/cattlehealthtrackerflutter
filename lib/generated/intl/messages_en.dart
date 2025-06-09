@@ -46,10 +46,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "emailDotCom": MessageLookupByLibrary.simpleMessage(
       "Email must end with .com",
     ),
+    "emailNotFound": MessageLookupByLibrary.simpleMessage("Email not found"),
+    "emailSent": MessageLookupByLibrary.simpleMessage("Email sent"),
     "emptyEmail": MessageLookupByLibrary.simpleMessage("Email can\'t be empty"),
     "emptyOTP": MessageLookupByLibrary.simpleMessage("OTP must be 6 digits"),
     "emptyPassword": MessageLookupByLibrary.simpleMessage(
       "Password can\'t be empty",
+    ),
+    "failedToSendEmail": MessageLookupByLibrary.simpleMessage(
+      "Failed to send email",
+    ),
+    "forgetPassword": MessageLookupByLibrary.simpleMessage(
+      "Forgot your password?",
     ),
     "incorrectOTP": MessageLookupByLibrary.simpleMessage(
       "You entered an incorrect OTP",
@@ -78,6 +86,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "resend": MessageLookupByLibrary.simpleMessage("Resend"),
     "resendAfter": MessageLookupByLibrary.simpleMessage("Resend after"),
     "roles": MessageLookupByLibrary.simpleMessage("Roles"),
+    "send": MessageLookupByLibrary.simpleMessage("Send"),
+    "sendResetPaswordLink": MessageLookupByLibrary.simpleMessage(
+      "Send Reset Password Link",
+    ),
     "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "twofa": MessageLookupByLibrary.simpleMessage("2F Authentication"),
     "users": MessageLookupByLibrary.simpleMessage("Users"),

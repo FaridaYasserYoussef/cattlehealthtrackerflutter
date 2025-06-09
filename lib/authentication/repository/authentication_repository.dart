@@ -42,5 +42,10 @@ class AuthenticationRepository {
     bool? logged_out = await dataSource.logoutLocally();
     return logged_out;
   }
+
+  Future<bool?> sendResetPasswordLink(String email) async{
+    bool? emailSent = await dataSource.sendResetPasswordLink(email);
+    return emailSent;
+  }
   
 }
